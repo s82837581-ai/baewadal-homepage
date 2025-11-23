@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>환불 및 취소 정책 | 배와달 · 모디트(Modit)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family:'Pretendard', Arial; line-height:1.7; padding:40px; max-width:860px; margin:auto; }
+h1 { font-size:28px; }
+h2 { margin-top:30px; }
+p, li { color:#333; font-size:16px; }
+</style>
+</head>
+<body>
+
+<h1>환불 및 취소 정책</h1>
+<p>본 정책은 배와달의 모디트(Modit) 서비스 이용과 관련한 환불 기준을 정합니다.</p>
+
+<h2>1. 결제 방식</h2>
+<ul>
+  <li>시장 운영비 CMS 자동이체</li>
+  <li>오픈뱅킹 계좌이체</li>
+  <li>기타 회사가 제공하는 결제수단</li>
+</ul>
+
+<h2>2. 환불이 가능한 경우</h2>
+<ul>
+  <li>오류로 인해 중복 결제된 경우</li>
+  <li>전산 문제로 잘못된 금액이 출금된 경우</li>
+  <li>법령에 따라 환불이 필요한 경우</li>
+</ul>
+
+<h2>3. 환불 불가 항목</h2>
+<ul>
+  <li>이미 제공·사용한 서비스에 대한 금액</li>
+  <li>시장 운영비 등 정기적 성격의 관리비</li>
+</ul>
+
+<h2>4. 환불 절차</h2>
+<ul>
+  <li>연락처: 010-8283-7581</li>
+  <li>이메일: baewadal@naver.com</li>
+  <li>사유 확인 후 3~7일 내 처리</li>
+</ul>
+
+</body>
+</html>
