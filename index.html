@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: 'Inter', 'Pretendard', 'Segoe UI', Arial, sans-serif;
-      background: #f5f6fa;
+      background: #F5F5F5;
       color: #333;
       line-height: 1.6;
     }
@@ -18,8 +18,7 @@
     .nav {
       width: 100%;
       padding: 18px 30px;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(10px);
+      background: #FFFFFF;
       position: fixed;
       top: 0;
       left: 0;
@@ -27,19 +26,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-bottom: 1px solid #E0E0D8;
     }
     .nav-title {
       font-size: 20px;
       font-weight: 800;
-      color: #2b2d42;
+      color: #4A7729;
     }
 
     /* HERO */
     .hero {
-      padding: 180px 20px 110px;
+      padding: 160px 20px 100px;
       text-align: center;
-      background: linear-gradient(140deg, #4e6fff, #29c3ff);
+      background: linear-gradient(135deg, #73B03F 0%, #4A7729 100%);
       color: white;
     }
     .hero h1 {
@@ -55,114 +54,100 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .hero-sub {
       margin-top: 24px;
       font-size: 16px;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
-    /* CTA BUTTON (오피스 버튼 - XP Luna 녹색) */
+    /* CTA BUTTON */
     .cta button {
-      padding: 14px 32px;
+      margin-top: 35px;
+      padding: 15px 36px;
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 10px;
       border: 1px solid #4A7729;
       cursor: pointer;
-      background: linear-gradient(to bottom, #73B03F 0%, #4A7729 100%);
-      color: #fff;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.20);
-      transition: 0.25s;
+      background: linear-gradient(to bottom, #73B03F, #4A7729);
+      color: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.20);
+      transition: 0.2s;
     }
     .cta button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
     }
 
-    /* Store download box (XP Luna 베이지 + 녹색 포인트) */
+    /* Store area */
     .store-box {
-      margin-top: 45px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 34px;
-      background: #F5DEB3;
+      margin-top: 40px;
+      background: #FFF8E1;
       border: 1px solid #E0E0D8;
       border-radius: 16px;
-      padding: 26px 32px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      padding: 35px 40px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
     }
 
     .store-left {
-      max-width: 380px;
-      text-align: left;
+      flex: 1;
     }
     .store-title {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
-      margin-bottom: 8px;
       color: #4A7729;
+      margin-bottom: 12px;
     }
     .store-desc {
-      font-size: 15px;
+      font-size: 16px;
+      color: #333;
       opacity: 0.95;
-      line-height: 1.4;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+      line-height: 1.45;
     }
-
-    /* Google Play 안내 버튼 (녹색 계열로 통일) */
     .store-btn {
-      padding: 10px 22px;
-      background: linear-gradient(to bottom, #73B03F 0%, #4A7729 100%);
-      color: #fff;
+      padding: 12px 26px;
+      background: linear-gradient(to bottom, #73B03F, #4A7729);
+      color: white;
       border: 1px solid #4A7729;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 15px;
-      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-      transition: 0.2s;
+      font-weight: 600;
     }
-    .store-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    }
-
     .store-status {
       margin-top: 10px;
-      font-size: 13px;
-      opacity: 0.85;
+      font-size: 14px;
+      color: #777;
     }
 
     .play-icon {
-      height: 60px;
-      opacity: 0.95;
+      height: 58px;
     }
 
-    /* 반응형 */
     @media (max-width: 720px) {
       .store-box {
         flex-direction: column;
         text-align: center;
-        padding: 26px 20px;
-      }
-      .store-left {
-        max-width: none;
-        text-align: center;
       }
     }
 
-    /* Container */
+    /* CONTENT */
     .container {
       max-width: 960px;
-      margin: 60px auto;
+      margin: 70px auto;
       padding: 0 20px;
     }
     h2 {
       font-size: 30px;
       margin-bottom: 15px;
-      color: #222;
+      color: #333;
     }
     .section {
       margin-bottom: 70px;
@@ -173,34 +158,9 @@
       background: white;
       border-radius: 16px;
       padding: 40px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+      border: 1px solid #E0E0D8;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
       margin-bottom: 40px;
-    }
-
-    /* Features */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      margin-top: 28px;
-    }
-    .feature {
-      background: white;
-      border-radius: 14px;
-      padding: 28px;
-      text-align: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-    }
-    .feature h3 {
-      margin-top: 8px;
-      font-size: 22px;
-      margin-bottom: 12px;
-      color: #222;
-      font-weight: 700;
-    }
-    .feature p {
-      opacity: 0.85;
-      font-size: 16px;
     }
 
     /* Footer */
@@ -208,9 +168,16 @@
       text-align: center;
       padding: 50px 20px;
       font-size: 14px;
-      color: #777;
+      color: #666;
+      background: #EFEFEA;
       margin-top: 100px;
-      background: #f1f2f6;
+      border-top: 1px solid #E0E0D8;
+    }
+
+    footer a {
+      color: #555;
+      text-decoration: none;
+      margin: 0 10px;
     }
 
     /* Modal */
@@ -231,6 +198,7 @@
       max-width: 340px;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 1px solid #E0E0D8;
     }
     .modal-box button {
       margin-top: 20px;
@@ -241,6 +209,7 @@
       color: white;
       cursor: pointer;
       font-size: 15px;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -267,95 +236,63 @@
 
   <div class="hero-sub">※ 현재 베타 서비스 준비 중입니다.</div>
 
-  <!-- 앱 다운로드 안내 박스 -->
+  <!-- 앱 다운로드 안내 -->
   <div class="store-box">
     <div class="store-left">
       <div class="store-title">모디트 상인 앱 다운로드</div>
       <div class="store-desc">
         Google Play 스토어에서 <strong>‘모디트(Modit)’</strong> 검색 후 다운로드하세요.<br>
-        앱 로그인은 <strong>각 시장 사무실에서 승인 후</strong> 이용하실 수 있습니다.
+        앱 로그인은 <strong>각 시장 사무실 승인 후</strong> 이용 가능합니다.
       </div>
-
       <button class="store-btn" onclick="openStoreModal()">Google Play 안내</button>
-
       <div class="store-status">※ Google Play 등록 준비중</div>
     </div>
 
-    <div class="store-right">
-      <img
-        src="https://play.google.com/intl/en_us/badges/static/images/badges/ko_badge_web_generic.png"
-        alt="Google Play"
-        class="play-icon"
-      >
-    </div>
+    <img 
+      src="https://play.google.com/intl/en_us/badges/static/images/badges/ko_badge_web_generic.png" 
+      class="play-icon"
+      alt="Google Play에서 다운로드">
   </div>
 </section>
 
 <!-- CONTENT -->
 <div class="container">
 
-  <!-- 회사 소개 -->
   <div class="section">
     <div class="card">
       <h2>배와달은 어떤 회사인가?</h2>
-      <p>
-        <strong>배와달(Bae & Dal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는  
-        로컬 시장 디지털 솔루션 기업입니다.
-      </p>
-      <p>
-        우리는 시장에서 실제 발생하는 문제를 관찰하여, 운영자와 상인 모두가 쉽게 사용할 수 있는  
-        <strong>현장 중심 디지털 시스템</strong>을 만듭니다.
-      </p>
-      <p>
-        전통시장 환경 속에서 <strong>업무 자동화 · 데이터 표준화 · 디지털 인프라 구축</strong>을  
-        핵심 가치로 삼고 있습니다.
-      </p>
+      <p><strong>배와달(Bae & Dal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는 로컬 시장 디지털 솔루션 기업입니다.</p>
+      <p>운영자와 상인 모두가 쉽게 사용할 수 있는 <strong>현장 중심 디지털 시스템</strong>을 개발합니다.</p>
+      <p><strong>업무 자동화 · 데이터 표준화 · 디지털 인프라 구축</strong>을 핵심 가치로 삼습니다.</p>
     </div>
   </div>
 
-  <!-- 모디트 소개 -->
   <div class="section">
     <div class="card">
       <h2>모디트(Modit)는 무엇인가?</h2>
-      <p>
-        모디트(Modit)는 전통시장 운영자(상인회, 시장관리자)를 위한  
-        <strong>올인원(All-in-One) 디지털 운영 시스템</strong>입니다.
-      </p>
+      <p>전통시장 운영자를 위한 <strong>올인원 디지털 운영 시스템</strong>입니다.</p>
 
-      <div class="features">
-        <div class="feature">
-          <h3>운영 데이터 관리</h3>
-          <p>점포·상인 정보, 계약, 운영비 등 시장 운영 데이터를 체계적으로 관리합니다.</p>
-        </div>
-
-        <div class="feature">
-          <h3>지원사업·행정 자동화</h3>
-          <p>정부/지자체 지원사업과 공문·보고서를 자동화해 업무 부담을 줄여줍니다.</p>
-        </div>
-
-        <div class="feature">
-          <h3>상인 앱 연동</h3>
-          <p>모디트 앱을 통해 상인과 실시간 소통 및 정보 전달이 가능합니다.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 가치 -->
-  <div class="section">
-    <div class="card">
-      <h2>왜 모디트인가?</h2>
       <ul>
-        <li>전통시장에 최적화된 현장형 업무 시스템</li>
-        <li>데이터 표준화 기반 시장 전체 운영 구조 혁신</li>
-        <li>반복 업무 자동화로 행정효율 극대화</li>
-        <li>상인 연동을 통한 소통 활성화</li>
-        <li>시장·지자체·운영자 모두에게 투명한 관리 체계 제공</li>
+        <li>점포·상인 데이터 관리</li>
+        <li>지원사업·공문·보고서 자동화</li>
+        <li>상인 전용 앱과 실시간 연동</li>
       </ul>
     </div>
   </div>
 
-  <!-- 회사 정보 -->
+  <div class="section">
+    <div class="card">
+      <h2>왜 모디트인가?</h2>
+      <ul>
+        <li>전통시장 맞춤형 업무 프로세스</li>
+        <li>데이터 기반 운영 고도화</li>
+        <li>반복 업무 자동화로 효율성 향상</li>
+        <li>상인 연동으로 소통 강화</li>
+        <li>시장-지자체-운영자 모두에게 투명한 관리</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="section">
     <div class="card">
       <h2>회사 정보</h2>
@@ -369,33 +306,29 @@
 
 </div>
 
+<!-- FOOTER -->
 <footer>
   © 2025 Baewadal / Modit. All rights reserved.
-
-  <div class="footer-links" style="margin-top:15px; font-size:14px;">
-    <a href="/terms/service.html" style="color:#555; text-decoration:none; margin-right:10px;">서비스 이용약관</a> |
-    <a href="/terms/privacy.html" style="color:#555; text-decoration:none; margin:0 10px;">개인정보 처리방침</a> |
-    <a href="/terms/refund.html" style="color:#555; text-decoration:none; margin-left:10px;">환불 및 취소 정책</a>
+  <div style="margin-top:12px;">
+    <a href="/terms/service.html">서비스 이용약관</a> |
+    <a href="/terms/privacy.html">개인정보 처리방침</a> |
+    <a href="/terms/refund.html">환불 및 취소 정책</a>
   </div>
 </footer>
 
-<!-- 오피스 모달 -->
+<!-- MODALS -->
 <div id="modal" class="modal-bg">
   <div class="modal-box">
     <h3>서비스 준비 중입니다</h3>
-    <p>현재 모디트 오피스는 정식 서비스 오픈 준비 중이며<br>곧 만나보실 수 있습니다.</p>
+    <p>현재 모디트 오피스는 베타 준비 중입니다.</p>
     <button onclick="closeModal()">확인</button>
   </div>
 </div>
 
-<!-- Store 안내 모달 -->
 <div id="storeModal" class="modal-bg">
   <div class="modal-box">
-    <h3>Google Play 등록 준비 중</h3>
-    <p>
-      현재 모디트 상인 앱은 Google Play 스토어에 등록 준비 중입니다.<br>
-      등록 완료 후 ‘모디트’ 검색을 통해 다운로드할 수 있습니다.
-    </p>
+    <h3>Google Play 등록 준비중</h3>
+    <p>모디트 상인 앱은 현재 등록 준비 중입니다.</p>
     <button onclick="closeStoreModal()">확인</button>
   </div>
 </div>
