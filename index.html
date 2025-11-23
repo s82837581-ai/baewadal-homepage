@@ -62,51 +62,48 @@
       opacity: 0.85;
     }
 
-    /* CTA BUTTON */
-    .cta {
-      margin-top: 35px;
-    }
+    /* CTA BUTTON (오피스 버튼 - XP Luna 녹색) */
     .cta button {
       padding: 14px 32px;
       font-size: 18px;
       font-weight: 600;
       border-radius: 10px;
-      border: none;
+      border: 1px solid #4A7729;
       cursor: pointer;
-      background: white;
-      color: #2d6cff;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      background: linear-gradient(to bottom, #73B03F 0%, #4A7729 100%);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.20);
       transition: 0.25s;
     }
     .cta button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.25);
     }
 
-    /* Store download box */
+    /* Store download box (XP Luna 베이지 + 녹색 포인트) */
     .store-box {
       margin-top: 45px;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 34px;
-      background: rgba(255,255,255,0.15);
+      background: #F5DEB3;
+      border: 1px solid #E0E0D8;
       border-radius: 16px;
       padding: 26px 32px;
-      backdrop-filter: blur(8px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
 
     .store-left {
       max-width: 380px;
       text-align: left;
     }
-
     .store-title {
       font-size: 20px;
       font-weight: 700;
       margin-bottom: 8px;
+      color: #4A7729;
     }
-
     .store-desc {
       font-size: 15px;
       opacity: 0.95;
@@ -114,11 +111,12 @@
       margin-bottom: 14px;
     }
 
+    /* Google Play 안내 버튼 (녹색 계열로 통일) */
     .store-btn {
       padding: 10px 22px;
-      background: #ffffff;
-      color: #1e78ff;
-      border: none;
+      background: linear-gradient(to bottom, #73B03F 0%, #4A7729 100%);
+      color: #fff;
+      border: 1px solid #4A7729;
       border-radius: 8px;
       font-size: 15px;
       font-weight: 600;
@@ -128,7 +126,7 @@
     }
     .store-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     }
 
     .store-status {
@@ -138,7 +136,7 @@
     }
 
     .play-icon {
-      height: 52px;
+      height: 60px;
       opacity: 0.95;
     }
 
@@ -149,7 +147,6 @@
         text-align: center;
         padding: 26px 20px;
       }
-
       .store-left {
         max-width: none;
         text-align: center;
@@ -235,15 +232,12 @@
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
-    .modal-box h3 {
-      margin-bottom: 12px;
-    }
     .modal-box button {
       margin-top: 20px;
       padding: 10px 24px;
       border-radius: 8px;
-      border: none;
-      background: #4e6fff;
+      border: 1px solid #4A7729;
+      background: linear-gradient(to bottom, #73B03F, #4A7729);
       color: white;
       cursor: pointer;
       font-size: 15px;
@@ -273,7 +267,7 @@
 
   <div class="hero-sub">※ 현재 베타 서비스 준비 중입니다.</div>
 
-  <!-- 앱 다운로드 안내 영역 -->
+  <!-- 앱 다운로드 안내 박스 -->
   <div class="store-box">
     <div class="store-left">
       <div class="store-title">모디트 상인 앱 다운로드</div>
@@ -288,10 +282,11 @@
     </div>
 
     <div class="store-right">
-<img src="https://play.google.com/intl/en_us/badges/static/images/badges/ko_badge_web_generic.png" 
-     alt="Google Play에서 다운로드" 
-     style="height: 60px;">
-
+      <img
+        src="https://play.google.com/intl/en_us/badges/static/images/badges/ko_badge_web_generic.png"
+        alt="Google Play"
+        class="play-icon"
+      >
     </div>
   </div>
 </section>
@@ -302,7 +297,7 @@
   <!-- 회사 소개 -->
   <div class="section">
     <div class="card">
-      <h2>배와달은 어떤 회사인가?</hh2>
+      <h2>배와달은 어떤 회사인가?</h2>
       <p>
         <strong>배와달(Bae & Dal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는  
         로컬 시장 디지털 솔루션 기업입니다.
@@ -328,7 +323,6 @@
       </p>
 
       <div class="features">
-
         <div class="feature">
           <h3>운영 데이터 관리</h3>
           <p>점포·상인 정보, 계약, 운영비 등 시장 운영 데이터를 체계적으로 관리합니다.</p>
@@ -343,7 +337,6 @@
           <h3>상인 앱 연동</h3>
           <p>모디트 앱을 통해 상인과 실시간 소통 및 정보 전달이 가능합니다.</p>
         </div>
-
       </div>
     </div>
   </div>
@@ -376,7 +369,7 @@
 
 </div>
 
-  <footer>
+<footer>
   © 2025 Baewadal / Modit. All rights reserved.
 
   <div class="footer-links" style="margin-top:15px; font-size:14px;">
@@ -384,7 +377,6 @@
     <a href="/terms/privacy.html" style="color:#555; text-decoration:none; margin:0 10px;">개인정보 처리방침</a> |
     <a href="/terms/refund.html" style="color:#555; text-decoration:none; margin-left:10px;">환불 및 취소 정책</a>
   </div>
-    
 </footer>
 
 <!-- 오피스 모달 -->
@@ -396,7 +388,7 @@
   </div>
 </div>
 
-<!-- Play 스토어 모달 -->
+<!-- Store 안내 모달 -->
 <div id="storeModal" class="modal-bg">
   <div class="modal-box">
     <h3>Google Play 등록 준비 중</h3>
