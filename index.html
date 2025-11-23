@@ -83,6 +83,79 @@
       box-shadow: 0 10px 28px rgba(0,0,0,0.18);
     }
 
+    /* Store download box */
+    .store-box {
+      margin-top: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 34px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 26px 32px;
+      backdrop-filter: blur(8px);
+    }
+
+    .store-left {
+      max-width: 380px;
+      text-align: left;
+    }
+
+    .store-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .store-desc {
+      font-size: 15px;
+      opacity: 0.95;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .store-btn {
+      padding: 10px 22px;
+      background: #ffffff;
+      color: #1e78ff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      transition: 0.2s;
+    }
+    .store-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    .store-status {
+      margin-top: 10px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .play-icon {
+      height: 52px;
+      opacity: 0.95;
+    }
+
+    /* 반응형 */
+    @media (max-width: 720px) {
+      .store-box {
+        flex-direction: column;
+        text-align: center;
+        padding: 26px 20px;
+      }
+
+      .store-left {
+        max-width: none;
+        text-align: center;
+      }
+    }
+
     /* Container */
     .container {
       max-width: 960px;
@@ -199,6 +272,26 @@
   </div>
 
   <div class="hero-sub">※ 현재 베타 서비스 준비 중입니다.</div>
+
+  <!-- 앱 다운로드 안내 영역 -->
+  <div class="store-box">
+    <div class="store-left">
+      <div class="store-title">모디트 상인 앱 다운로드</div>
+      <div class="store-desc">
+        Google Play 스토어에서 <strong>‘모디트(Modit)’</strong> 검색 후 다운로드하세요.<br>
+        앱 로그인은 <strong>각 시장 사무실에서 승인 후</strong> 이용하실 수 있습니다.
+      </div>
+
+      <button class="store-btn" onclick="openStoreModal()">Google Play 안내</button>
+
+      <div class="store-status">※ Google Play 등록 준비중</div>
+    </div>
+
+    <div class="store-right">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_KO.svg"
+        alt="Google Play" class="play-icon" />
+    </div>
+  </div>
 </section>
 
 <!-- CONTENT -->
@@ -207,16 +300,18 @@
   <!-- 회사 소개 -->
   <div class="section">
     <div class="card">
-      <h2>배와달은 어떤 회사인가?</h2>
+      <h2>배와달은 어떤 회사인가?</hh2>
       <p>
-        <strong>배와달(Bae & Dal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는 로컬 시장 디지털 솔루션 기업입니다.
+        <strong>배와달(Bae & Dal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는  
+        로컬 시장 디지털 솔루션 기업입니다.
       </p>
       <p>
         우리는 시장에서 실제 발생하는 문제를 관찰하여, 운영자와 상인 모두가 쉽게 사용할 수 있는  
         <strong>현장 중심 디지털 시스템</strong>을 만듭니다.
       </p>
       <p>
-        전통시장 환경 속에서 <strong>업무 자동화 · 데이터 표준화 · 디지털 인프라 구축</strong>을 핵심 가치로 삼고 있습니다.
+        전통시장 환경 속에서 <strong>업무 자동화 · 데이터 표준화 · 디지털 인프라 구축</strong>을  
+        핵심 가치로 삼고 있습니다.
       </p>
     </div>
   </div>
@@ -283,12 +378,24 @@
   © 2025 Baewadal / Modit. All rights reserved.
 </footer>
 
-<!-- MODAL -->
+<!-- 오피스 모달 -->
 <div id="modal" class="modal-bg">
   <div class="modal-box">
     <h3>서비스 준비 중입니다</h3>
     <p>현재 모디트 오피스는 정식 서비스 오픈 준비 중이며<br>곧 만나보실 수 있습니다.</p>
     <button onclick="closeModal()">확인</button>
+  </div>
+</div>
+
+<!-- Play 스토어 모달 -->
+<div id="storeModal" class="modal-bg">
+  <div class="modal-box">
+    <h3>Google Play 등록 준비 중</h3>
+    <p>
+      현재 모디트 상인 앱은 Google Play 스토어에 등록 준비 중입니다.<br>
+      등록 완료 후 ‘모디트’ 검색을 통해 다운로드할 수 있습니다.
+    </p>
+    <button onclick="closeStoreModal()">확인</button>
   </div>
 </div>
 
@@ -298,6 +405,13 @@
   }
   function closeModal() {
     document.getElementById('modal').style.display = 'none';
+  }
+
+  function openStoreModal() {
+    document.getElementById('storeModal').style.display = 'flex';
+  }
+  function closeStoreModal() {
+    document.getElementById('storeModal').style.display = 'none';
   }
 </script>
 
