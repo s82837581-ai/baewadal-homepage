@@ -3,154 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>모디트(Modit) | 전통시장 디지털 운영 플랫폼</title>
+  <title>배와달 | 모디트(Modit) 전통시장 디지털 운영 플랫폼</title>
 
   <style>
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
-      background: #f9fafb;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: #f6f7f9;
       color: #333;
       line-height: 1.6;
     }
 
-    header {
-      background: linear-gradient(135deg, #4e73df, #1cc7d0);
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #4e73df, #2ec6ff);
       color: white;
-      padding: 60px 20px;
+      padding: 100px 20px;
       text-align: center;
     }
 
-    header h1 {
-      font-size: 36px;
+    .hero h1 {
+      font-size: 42px;
       margin: 0;
-      font-weight: 700;
+      font-weight: 800;
+    }
+    .hero p {
+      margin-top: 20px;
+      font-size: 20px;
+      opacity: 0.95;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    header p {
-      font-size: 18px;
-      margin-top: 10px;
-      opacity: 0.9;
-    }
-
-    section {
-      max-width: 900px;
+    /* Container */
+    .container {
+      max-width: 980px;
       margin: 50px auto;
       padding: 0 20px;
     }
 
     h2 {
-      font-size: 28px;
+      font-size: 30px;
       margin-bottom: 15px;
       color: #222;
     }
 
-    p, li {
-      font-size: 17px;
+    .section {
+      margin-bottom: 60px;
     }
 
-    ul {
-      margin-top: 10px;
-      padding-left: 20px;
-    }
-
+    /* Card */
     .card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
-      padding: 25px 30px;
+      border-radius: 14px;
+      padding: 30px;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
       margin-bottom: 40px;
     }
 
-    footer {
-      text-align: center;
-      padding: 30px;
-      font-size: 14px;
-      color: #777;
+    /* 3-column features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
     }
 
-    @media (max-width: 600px) {
-      header h1 { font-size: 30px; }
-      h2 { font-size: 24px; }
+    .feature {
+      background: white;
+      border-radius: 14px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+    }
+
+    .feature h3 {
+      margin-top: 12px;
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .feature p {
+      opacity: 0.85;
+      font-size: 16px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px;
+      font-size: 14px;
+      color: #777;
+      margin-top: 80px;
     }
   </style>
 </head>
 
 <body>
 
-<header>
+<!-- HERO -->
+<section class="hero">
   <h1>모디트(Modit)</h1>
-  <p>전통시장을 위한 디지털 운영 & 자동화 플랫폼</p>
-</header>
-
-<section>
-  <div class="card">
-    <h2>모디트는 어떤 서비스인가?</h2>
-    <p>
-      <b>모디트(Modit)</b>는 전통시장의 행정업무, 상인 관리, 지원사업 관리, 보고서 자동화,
-      매출·운영 데이터 기반 의사결정을 지원하는 <b>전통시장 디지털 운영 SaaS 플랫폼</b>입니다.
-    </p>
-    <p>
-      시장 운영자(상인회, 시장관리자)의 업무를 디지털로 표준화하여 
-      <b>업무 효율을 극대화</b>하고, 상인들의 참여를 높이는 
-      <b>현장 중심의 디지털 인프라</b>를 구축합니다.
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>왜 전통시장에 디지털 운영 플랫폼이 필요한가?</h2>
-    <ul>
-      <li>지원사업·행정업무가 매년 증가하는데 관리 시스템이 없음</li>
-      <li>시장 운영비·공동관리비 관리가 비효율적</li>
-      <li>상인 정보와 점포 데이터 표준화 필요</li>
-      <li>보고서, 정산, 운영 기록 등 반복 업무가 과다</li>
-      <li>지자체·정부 예산사업의 관리 기준 요구 증가</li>
-    </ul>
-    <p>
-      모디트는 이러한 문제를 해결하는 <b>전통시장 전용 디지털 운영 인프라</b>입니다.
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>모디트 주요 기능</h2>
-    <ul>
-      <li>상인·점포 관리 (기초 정보, 계약, 상태, 현황)</li>
-      <li>시장 운영비·공동관리비 관리</li>
-      <li>지원사업 등록·정리·진행상황 관리</li>
-      <li>AI 기반 보고서 자동 생성 기능</li>
-      <li>서류·공문·영수증 디지털 업로드 및 자동 정리</li>
-      <li>모디트 앱(사장님 앱)과 실시간 연동</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2>운영비 자동이체(CMS 출금) 도입 목적</h2>
-    <p>
-      전통시장에서 매월 발생하는 <b>운영비·공동관리비·점포 분담금</b>을 보다 효율적으로 관리하기 위해
-      모디트는 <b>자동이체(CMS 출금 서비스)</b>를 도입합니다.
-    </p>
-    <ul>
-      <li>점포별 운영비 자동 출금</li>
-      <li>미납 관리 자동화</li>
-      <li>상인 부담 감소 (현금·수기 납부 제거)</li>
-      <li>시장 운영자의 정산 업무 간소화</li>
-      <li>납부 현황 실시간 확인</li>
-    </ul>
-    <p>
-      이를 통해 시장 운영의 투명성·효율성을 높이고 상인들의 편의를 강화합니다.
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>회사 정보</h2>
-    <p><b>상호:</b> 배와달 (baewadal)</p>
-    <p><b>서비스명:</b> 모디트(Modit)</p>
-    <p><b>대표:</b> 서동철</p>
-    <p><b>연락처:</b> 010-8283-7581</p>
-    <p><b>이메일:</b> baewadal@naver..com</p>
-  </div>
-
+  <p>
+    전통시장의 행정·운영 업무를 디지털화하여  
+    시장 운영을 더 정확하고, 더 빠르게, 더 효율적으로 만드는  
+    <strong>전통시장 디지털 운영 플랫폼</strong>
+  </p>
 </section>
+
+<div class="container">
+
+  <!-- 배와달 회사 소개 -->
+  <div class="section">
+    <div class="card">
+      <h2>배와달은 어떤 회사인가?</h2>
+      <p>
+        <strong>배와달(Bae & Dal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는  
+        로컬 시장 디지털 솔루션 기업입니다.
+      </p>
+      <p>
+        우리는 시장에서 실제 발생하는 문제를 현장에서 관찰하고,  
+        운영자·상인 모두가 쉽게 사용할 수 있는  
+        <strong>현장 중심의 디지털 시스템</strong>을 구축합니다.
+      </p>
+      <p>
+        변경과 혁신이 어렵던 전통시장 환경 속에서  
+        <strong>업무 자동화 · 데이터 표준화 · 디지털 인프라 구축</strong>을  
+        핵심 가치로 삼고 있습니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- 모디트 소개 -->
+  <div class="section">
+    <div class="card">
+      <h2>모디트(Modit)는 무엇인가?</h2>
+      <p>
+        모디트(Modit)는 전통시장 운영자(상인회, 시장관리자)를 위한  
+        <strong>올인원(All-in-One) 디지털 운영 시스템</strong>입니다.
+      </p>
+
+      <div class="features">
+
+        <div class="feature">
+          <h3>운영 데이터 관리</h3>
+          <p>
+            점포·상인 정보, 계약 현황, 운영비 내역 등  
+            시장 전반의 운영 데이터를 체계적으로 관리합니다.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>지원사업 및 행정업무</h3>
+          <p>
+            정부·지자체 지원사업 관리, 공문·서류 정리, 보고서 자동화를 통해  
+            사무 업무 부담을 크게 줄여줍니다.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>상인 앱 연동</h3>
+          <p>
+            ‘모디트 앱’을 통해 상인은 점포 정보·공지·행정 요청 등을  
+            손쉽게 확인하고 소통할 수 있습니다.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 시스템 가치 소개 -->
+  <div class="section">
+    <div class="card">
+      <h2>왜 모디트인가?</h2>
+      <ul>
+        <li>전통시장 업무에 특화된 실제 현장형 시스템</li>
+        <li>데이터 표준화 기반으로 시장 전체 운영 구조 개선</li>
+        <li>반복되는 업무 과정을 자동화해 효율성 극대화</li>
+        <li>앱 연동을 통한 상인 소통·참여도 향상</li>
+        <li>시장·지자체·운영자 모두에게 필요한 투명한 관리 체계 구축</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 회사 정보 -->
+  <div class="section">
+    <div class="card">
+      <h2>회사 정보</h2>
+      <p><strong>상호 :</strong> 배와달(Bae & Dal)</p>
+      <p><strong>서비스 :</strong> 모디트(Modit) 전통시장 디지털 운영 시스템</p>
+      <p><strong>대표 :</strong> 서동철</p>
+      <p><strong>연락처 :</strong> 010-0000-0000</p>
+      <p><strong>이메일 :</strong> example@yourmail.com</p>
+    </div>
+  </div>
+
+</div>
 
 <footer>
   © 2025 Baewadal / Modit. All rights reserved.
