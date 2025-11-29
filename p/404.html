@@ -5,32 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirecting...</title>
   <script>
-    // GitHub Pages 리다이렉션
-    // /p/price_abc123 → /p/?id=price_abc123
-    
-    (function() {
+    (function () {
       const path = window.location.pathname;
-      
-      // /p/{priceListId} 패턴 감지
+      const search = window.location.search;
+
+      // 이미 쿼리 파라미터 방식이면 절대 리다이렉트 X
+      if (search && search.includes("id=")) {
+        return; // 정상 페이지로 이동
+      }
+
+      // /p/{priceListId} → /p/?id={priceListId}
       const match = path.match(/\/p\/([^\/]+)/);
-      
       if (match && match[1]) {
-        const priceListId = match[1];
-        
-        // .html 확장자 제거
-        const cleanId = priceListId.replace('.html', '');
-        
-        // index.html이 아닌 경우에만 리다이렉트
-        if (cleanId && cleanId !== 'index') {
-          const newUrl = `/p/?id=${cleanId}`;
-          console.log('🔀 Redirecting:', path, '→', newUrl);
+        const priceListId = match[1].replace('.html', '');
+        if (priceListId !== 'index') {
+          const newUrl = `/p/?id=${priceListId}`;
           window.location.replace(newUrl);
           return;
         }
       }
-      
-      // 기본 홈으로 리다이렉트
-      window.location.replace('/');
+
+      // 그 외는 /p/index.html 로 이동
+      window.location.replace('/p/');
     })();
   </script>
 </head>
