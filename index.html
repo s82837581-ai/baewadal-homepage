@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>배와달 | 모디트(Modit) 전통시장 디지털 운영 플랫폼</title>
+ 
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Pretendard', 'Segoe UI', Arial, sans-serif;
+      background: #F5F5F5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    .nav {
+      width: 100%;
+      padding: 18px 30px;
+      background: #FFFFFF;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #E0E0D8;
+    }
+    .nav-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #4A7729;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 160px 20px 100px;
+      text-align: center;
+      background: linear-gradient(135deg, #73B03F 0%, #4A7729 100%);
+      color: white;
+    }
+    .hero h1 {
+      font-size: 46px;
+      font-weight: 800;
+      margin: 0;
+    }
+    .hero p {
+      margin-top: 18px;
+      font-size: 20px;
+      opacity: 0.95;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-sub {
+      margin-top: 24px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    /* CTA BUTTON */
+    .cta button {
+      margin-top: 35px;
+      padding: 15px 36px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 10px;
+      border: 1px solid #4A7729;
+      cursor: pointer;
+      background: linear-gradient(to bottom, #73B03F, #4A7729);
+      color: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.20);
+      transition: 0.2s;
+    }
+    .cta button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    }
+
+    /* Store area */
+    .store-box {
+      margin-top: 40px;
+      background: #FFF8E1;
+      border: 1px solid #E0E0D8;
+      border-radius: 16px;
+      padding: 35px 40px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .store-left {
+      flex: 1;
+    }
+    .store-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #4A7729;
+      margin-bottom: 12px;
+    }
+    .store-desc {
+      font-size: 16px;
+      color: #333;
+      opacity: 0.95;
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+    .store-btn {
+      padding: 12px 26px;
+      background: linear-gradient(to bottom, #73B03F, #4A7729);
+      color: white;
+      border: 1px solid #4A7729;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .store-status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .play-icon {
+      height: 58px;
+    }
+
+    @media (max-width: 720px) {
+      .store-box {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    /* CONTENT */
+    .container {
+      max-width: 960px;
+      margin: 70px auto;
+      padding: 0 20px;
+    }
+    h2 {
+      font-size: 30px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    .section {
+      margin-bottom: 70px;
+    }
+
+    /* Card */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      border: 1px solid #E0E0D8;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      margin-bottom: 40px;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 50px 20px;
+      font-size: 14px;
+      color: #666;
+      background: #EFEFEA;
+      margin-top: 100px;
+      border-top: 1px solid #E0E0D8;
+    }
+
+    footer a {
+      color: #555;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    /* Modal */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      left:0; top:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.55);
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+    .modal-box {
+      background: white;
+      padding: 35px 30px;
+      border-radius: 14px;
+      max-width: 340px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 1px solid #E0E0D8;
+    }
+    .modal-box button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: 1px solid #4A7729;
+      background: linear-gradient(to bottom, #73B03F, #4A7729);
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-title">배와달 Baewadal</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>모디트(Modit)</h1>
+  <p>
+    전통시장의 행정·운영 업무를 디지털 전환하여 시장 운영을
+    더 정확하고, 더 빠르게, 더 효율적으로 만드는  
+    <strong>전통시장 디지털 운영 플랫폼</strong>
+  </p>
+
+  <div class="cta">
+    <button onclick="openModal()">모디트 오피스 시작하기</button>
+  </div>
+
+  <div class="hero-sub">※ 현재 베타 서비스 준비 중입니다.</div>
+
+  <!-- 앱 다운로드 안내 -->
+  <div class="store-box">
+    <div class="store-left">
+      <div class="store-title">모디트 앱 다운로드</div>
+      <div class="store-desc">
+        Google Play 스토어에서 <strong>‘모디트(Modit)’</strong> 검색 후 다운로드하세요.<br>
+        앱 로그인은 <strong>각 시장 사무실 승인 후</strong> 이용 가능합니다.
+      </div>
+      <button class="store-btn" onclick="openStoreModal()">Google Play 안내</button>
+      <div class="store-status">※ Google Play 등록 준비중</div>
+    </div>
+
+    <img 
+      src="https://play.google.com/intl/en_us/badges/static/images/badges/ko_badge_web_generic.png" 
+      class="play-icon"
+      alt="Google Play에서 다운로드">
+  </div>
+</section>
+
+<!-- CONTENT -->
+<div class="container">
+
+  <div class="section">
+    <div class="card">
+      <h2>배와달은 어떤 회사인가?</h2>
+      <p><strong>배와달(Baewadal)</strong>은 전통시장의 운영환경을 디지털 기반으로 혁신하는 로컬 시장 디지털 솔루션 기업입니다.</p>
+      <p>전통시장의 모두가 쉽게 사용할 수 있는 <strong>현장 중심 디지털 시스템</strong>을 개발합니다.</p>
+      <p><strong>업무 자동화 · 데이터 표준화 · 디지털 인프라 구축</strong>을 핵심 가치로 삼습니다.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <h2>모디트(Modit)는 무엇인가?</h2>
+      <p>전통시장 운영자를 위한 <strong>올인원 디지털 운영 시스템</strong>입니다.</p>
+
+      <ul>
+        <li>점포 데이터 관리</li>
+        <li>지원사업·공문·보고서 자동화</li>
+        <li>점포 전용 앱과 실시간 연동</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <h2>왜 모디트인가?</h2>
+      <ul>
+        <li>전통시장 맞춤형 업무 프로세스</li>
+        <li>데이터 기반 운영 고도화</li>
+        <li>반복 업무 자동화로 효율성 향상</li>
+        <li>점포 연동으로 소통 강화</li>
+        <li>시장-지자체-운영자 모두에게 투명한 관리</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <h2>회사 정보</h2>
+      <p><strong>상호 :</strong> 배와달(Baewadal)</p>
+      <p><strong>서비스 :</strong> 모디트(Modit) 전통시장 디지털 운영 시스템</p>
+      <p><strong>대표 :</strong> 서동철</p>
+      <p><strong>연락처 :</strong> 010-8283-7581</p>
+      <p><strong>이메일 :</strong> baewadal@baewadal.co.kr</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2025 Baewadal / Modit. All rights reserved.
+  <div style="margin-top:12px;">
+    <a href="/terms/service.html">서비스 이용약관</a> |
+    <a href="/terms/privacy.html">개인정보 처리방침</a> |
+    <a href="/terms/refund.html">환불 및 취소 정책</a>  |
+    <a href="/terms/account-delete.html">계정 삭제 안내</a>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div id="modal" class="modal-bg">
+  <div class="modal-box">
+    <h3>서비스 준비 중입니다</h3>
+    <p>현재 모디트 오피스는 베타 준비 중입니다.</p>
+    <button onclick="closeModal()">확인</button>
+  </div>
+</div>
+
+<div id="storeModal" class="modal-bg">
+  <div class="modal-box">
+    <h3>Google Play 등록 준비중</h3>
+    <p>모디트 앱은 현재 등록 준비 중입니다.</p>
+    <button onclick="closeStoreModal()">확인</button>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('modal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  function openStoreModal() {
+    document.getElementById('storeModal').style.display = 'flex';
+  }
+  function closeStoreModal() {
+    document.getElementById('storeModal').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
