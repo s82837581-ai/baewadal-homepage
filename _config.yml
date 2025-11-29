@@ -1,0 +1,20 @@
+# GitHub Pages 설정
+theme: null
+plugins: []
+
+# SEO
+title: "모디트 - 가격표 시스템"
+description: "투명한 가격, 신뢰할 수 있는 거래"
+lang: ko
+author: Baewadal
+
+# 경로 설정
+baseurl: ""
+url: "https://baewadal.co.kr"
+
+# 제외 파일
+exclude:
+  - README.md
+  - INTEGRATION.md
+  - .git
+  - .gitignore

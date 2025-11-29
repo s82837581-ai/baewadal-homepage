@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    // GitHub Pages 리다이렉션
+    // /p/price_abc123 → /p/?id=price_abc123
+    
+    (function() {
+      const path = window.location.pathname;
+      
+      // /p/{priceListId} 패턴 감지
+      const match = path.match(/\/p\/([^\/]+)/);
+      
+      if (match && match[1]) {
+        const priceListId = match[1];
+        
+        // .html 확장자 제거
+        const cleanId = priceListId.replace('.html', '');
+        
+        // index.html이 아닌 경우에만 리다이렉트
+        if (cleanId && cleanId !== 'index') {
+          const newUrl = `/p/?id=${cleanId}`;
+          console.log('🔀 Redirecting:', path, '→', newUrl);
+          window.location.replace(newUrl);
+          return;
+        }
+      }
+      
+      // 기본 홈으로 리다이렉트
+      window.location.replace('/');
+    })();
+  </script>
+</head>
+<body>
+  <div style="text-align: center; padding: 50px; font-family: sans-serif;">
+    <h1>Redirecting...</h1>
+    <p>잠시만 기다려주세요...</p>
+  </div>
+</body>
+</html>
