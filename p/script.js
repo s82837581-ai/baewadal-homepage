@@ -100,8 +100,8 @@ async function initPage() {
 
     renderPriceList(priceData);
 
-    // 조회수 증가
-    updateViewCount(priceListId);
+    // 조회수 증가 (이미 public API에서 자동 증가되지만 별도 호출도 가능)
+    // updateViewCount(priceListId);
 
   } catch (err) {
     showError("가격표를 불러오는 중 오류가 발생했습니다.");
@@ -144,10 +144,23 @@ async function fetchPriceList(priceListId) {
   const url = `${API_BASE}/price-list/public/${priceListId}`;
 
   const res = await fetch(url);
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.error("API 호출 실패:", res.status, res.statusText);
+    return null;
+  }
 
   const data = await res.json();
-  return data;
+  console.log("📦 서버 응답 데이터:", data);
+  
+  // ✅ 수정: 서버 응답 구조에 맞게 데이터 추출
+  if (data.success && data.priceList) {
+    return {
+      ...data.priceList,
+      views: data.viewCount || data.priceList.views || 0
+    };
+  }
+  
+  return null;
 }
 
 async function updateViewCount(priceListId) {
@@ -176,6 +189,8 @@ async function submitReport(payload) {
    ====================== */
 
 function renderPriceList(data) {
+  console.log("🎨 렌더링 데이터:", data);
+  
   document.getElementById("loading").style.display = "none";
   document.getElementById("content").style.display = "block";
 
@@ -245,6 +260,7 @@ document.getElementById("reportForm").addEventListener("submit", async (e) => {
   if (ok) {
     alert("제보가 접수되었습니다. 감사합니다.");
     closeReportModal();
+    document.getElementById("reportForm").reset();
   } else {
     alert("제보 제출에 실패했습니다. 다시 시도해주세요.");
   }
