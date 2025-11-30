@@ -4,11 +4,11 @@
    ===================================================================== */
 
 /* ======================
-   0. 설정 (환경 변수)
+설정 (환경 변수)
    ====================== */
 
-// 반드시 수정해야 하는 API Endpoint (너의 서버 URL)
-const API_BASE = "https://YOUR_API_DOMAIN/v2";
+// ✅ 수정됨: 실제 Supabase API Endpoint
+const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
 
 // 다국어 번역 테이블
 const translations = {
@@ -74,7 +74,7 @@ const translations = {
 
 
 /* ======================
-   1. 초기 로드
+초기 로드
    ====================== */
 
 document.addEventListener("DOMContentLoaded", initPage);
@@ -111,7 +111,7 @@ async function initPage() {
 
 
 /* ======================
-   2. 다국어 적용 함수
+다국어 적용 함수
    ====================== */
 
 function applyLanguage(lang) {
@@ -137,7 +137,7 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
 
 
 /* ======================
-   3. API 호출 함수
+API 호출 함수
    ====================== */
 
 async function fetchPriceList(priceListId) {
@@ -172,7 +172,7 @@ async function submitReport(payload) {
 
 
 /* ======================
-   4. 가격표 렌더링
+가격표 렌더링
    ====================== */
 
 function renderPriceList(data) {
@@ -202,7 +202,7 @@ function renderPriceList(data) {
 
 
 /* ======================
-   5. 신고 모달 제어
+신고 모달 제어
    ====================== */
 
 function openReportModal() {
@@ -215,7 +215,7 @@ function closeReportModal() {
 
 
 /* ======================
-   6. 신고 제출
+신고 제출
    ====================== */
 
 document.getElementById("reportForm").addEventListener("submit", async (e) => {
@@ -252,7 +252,7 @@ document.getElementById("reportForm").addEventListener("submit", async (e) => {
 
 
 /* ======================
-   7. 공용 함수
+공용 함수
    ====================== */
 
 function showError(msg) {
