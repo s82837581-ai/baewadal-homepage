@@ -2,550 +2,315 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>모디트 - 가격표 시스템</title>
-  <meta name="description" content="투명한 가격, 신뢰할 수 있는 거래">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>가격표 - MODIT</title>
   
-  <!-- Open Graph -->
-  <meta property="og:title" content="모디트 가격표">
-  <meta property="og:description" content="투명한 가격, 신뢰할 수 있는 거래">
-  <meta property="og:type" content="website">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
-    * {
+    body {
+      background-color: #FAF9F7;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
-      background: #FAF9F7;
-      color: #2C2926;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+    
+    .gradient-header {
+      background: linear-gradient(to bottom, #ffffff, #fafafa);
     }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      min-height: 100vh;
+    
+    .gradient-card {
+      background: linear-gradient(to bottom right, #ffffff, #fefefe);
     }
-
-    .header {
-      text-align: center;
-      padding: 40px 20px;
-      background: white;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    
+    .shadow-soft {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
-
-    .logo {
-      font-size: 32px;
-      font-weight: bold;
-      color: #E6A47D;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      font-size: 16px;
-      color: #666;
-    }
-
-    .language-selector {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .lang-btn {
-      padding: 10px 20px;
-      border: 2px solid #E6A47D;
-      background: white;
-      color: #E6A47D;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.2s;
-    }
-
-    .lang-btn:hover, .lang-btn.active {
-      background: #E6A47D;
-      color: white;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
+    
+    .loading-spinner {
       border: 4px solid #E6A47D;
       border-top-color: transparent;
       border-radius: 50%;
+      width: 48px;
+      height: 48px;
       animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
     }
-
+    
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    .error {
-      background: #fee;
-      border: 2px solid #fcc;
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .error-title {
-      font-size: 24px;
-      color: #c33;
-      margin-bottom: 10px;
-    }
-
-    .store-info {
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .store-name {
-      font-size: 28px;
-      font-weight: bold;
-      color: #2C2926;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .store-icon {
-      width: 40px;
-      height: 40px;
-      background: #E6A47D;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-    }
-
-    .store-meta {
-      display: flex;
-      gap: 20px;
-      color: #666;
-      font-size: 14px;
-      flex-wrap: wrap;
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .price-list {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .section-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #E6A47D;
-    }
-
-    .price-item {
-      border: 2px solid #f0f0f0;
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 15px;
-      transition: all 0.2s;
-    }
-
-    .price-item:hover {
-      border-color: #E6A47D;
-      box-shadow: 0 2px 8px rgba(230, 164, 125, 0.2);
-    }
-
-    .item-name {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #2C2926;
-    }
-
-    .item-price {
-      font-size: 24px;
-      color: #E6A47D;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .item-meta {
-      display: flex;
-      gap: 15px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .item-description {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid #f0f0f0;
-      color: #666;
-      font-size: 14px;
-    }
-
-    .report-section {
-      background: linear-gradient(135deg, #fff5ed 0%, #ffe8d6 100%);
-      border: 3px solid #E6A47D;
-      border-radius: 20px;
-      padding: 30px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .report-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #2C2926;
-      margin-bottom: 10px;
-    }
-
-    .report-desc {
-      font-size: 16px;
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .report-btn {
-      background: #E6A47D;
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .report-btn:hover {
-      background: #D89470;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(230, 164, 125, 0.3);
-    }
-
-    .modal {
+    
+    /* 모달 스타일 */
+    .modal-overlay {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
       z-index: 1000;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .modal.active {
-      display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
-
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
     .modal-content {
       background: white;
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 500px;
+      border-radius: 16px;
+      max-width: 600px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
+      padding: 24px;
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .modal-title {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .close-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: #f0f0f0;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    
+    .report-type-btn {
       transition: all 0.2s;
     }
-
-    .close-btn:hover {
-      background: #e0e0e0;
+    
+    .report-type-btn:hover {
+      transform: translateY(-2px);
     }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #2C2926;
-    }
-
-    .form-input, .form-textarea {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 16px;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
-
-    .form-input:focus, .form-textarea:focus {
-      outline: none;
+    
+    .report-type-btn.selected {
       border-color: #E6A47D;
-    }
-
-    .form-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .submit-btn {
-      width: 100%;
-      background: #E6A47D;
-      color: white;
-      border: none;
-      padding: 15px;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .submit-btn:hover:not(:disabled) {
-      background: #D89470;
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 40px 20px;
-      color: #999;
-    }
-
-    .footer-logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #E6A47D;
-      margin-bottom: 10px;
-    }
-
-    .footer-links {
-      margin: 20px 0;
-    }
-
-    .footer-link {
-      color: #666;
-      text-decoration: none;
-      margin: 0 15px;
-      transition: color 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #E6A47D;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 10px;
-      }
-
-      .header {
-        padding: 30px 15px;
-      }
-
-      .logo {
-        font-size: 24px;
-      }
-
-      .store-name {
-        font-size: 24px;
-      }
-
-      .item-name {
-        font-size: 18px;
-      }
-
-      .item-price {
-        font-size: 20px;
-      }
+      background-color: #FFF5EE;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="logo">모디트 (MODIT)</div>
-      <div class="subtitle" data-i18n="tagline">투명한 가격, 신뢰할 수 있는 거래</div>
+  
+  <!-- 로딩 화면 -->
+  <div id="loading-screen" class="min-h-screen flex items-center justify-center">
+    <div class="text-center bg-white p-10 rounded-3xl border-4 border-[#E6A47D]">
+      <div class="loading-spinner mx-auto mb-6"></div>
+      <p class="text-2xl text-gray-600">가격표를 불러오는 중...</p>
     </div>
-
-    <!-- Language Selector -->
-    <div class="language-selector">
-      <button class="lang-btn active" data-lang="ko">한국어</button>
-      <button class="lang-btn" data-lang="en">English</button>
-      <button class="lang-btn" data-lang="zh">中文</button>
-      <button class="lang-btn" data-lang="ja">日本語</button>
+  </div>
+  
+  <!-- 에러 화면 -->
+  <div id="error-screen" class="min-h-screen flex items-center justify-center px-6" style="display: none;">
+    <div class="text-center max-w-md mx-auto">
+      <div class="text-red-500 text-6xl mb-6">⚠️</div>
+      <p class="text-3xl text-gray-900 mb-4">가격표를 찾을 수 없습니다</p>
+      <p class="text-xl text-gray-600 mb-4">오류가 발생했습니다</p>
+      <div id="error-message" class="mt-6 p-4 bg-red-50 rounded-xl border border-red-200 text-left"></div>
     </div>
-
-    <!-- Loading State -->
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      <div data-i18n="loading">가격표를 불러오는 중...</div>
-    </div>
-
-    <!-- Error State -->
-    <div id="error" class="error" style="display: none;">
-      <div class="error-title" data-i18n="error">오류</div>
-      <div id="error-message"></div>
-    </div>
-
-    <!-- Content -->
-    <div id="content" style="display: none;">
-      <!-- Store Info -->
-      <div class="store-info">
-        <div class="store-name">
-          <div class="store-icon">🏪</div>
-          <span id="storeName"></span>
+  </div>
+  
+  <!-- 메인 콘텐츠 -->
+  <div id="main-content" style="display: none;">
+    <!-- 헤더 -->
+    <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <!-- 환영 메시지 -->
+        <div class="text-center mb-4">
+          <h1 class="text-2xl sm:text-3xl text-[#E6A47D] mb-2" id="welcome-message">전통시장에 와주셔서 감사합니다</h1>
         </div>
-        <div class="store-meta">
-          <div class="meta-item">
-            <span>👁️</span>
-            <span data-i18n="views">조회수</span>: <span id="viewCount">0</span>
-          </div>
-          <div class="meta-item">
-            <span>🕒</span>
-            <span data-i18n="updated">최종 업데이트</span>: <span id="updatedAt"></span>
+
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <h2 class="text-xl sm:text-2xl text-gray-900" id="store-name">점포명</h2>
           </div>
         </div>
+
+        <!-- 언어 선택 -->
+        <div class="flex gap-2">
+          <button onclick="changeLanguage('ko')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-[#E6A47D] text-white">
+            한국어
+          </button>
+          <button onclick="changeLanguage('en')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+            English
+          </button>
+          <button onclick="changeLanguage('zh')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+            中文
+          </button>
+          <button onclick="changeLanguage('ja')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
+            日本語
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <!-- 가격표 제목 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-6 mb-6 border-2 border-[#E6A47D]/30">
+        <h2 class="text-2xl sm:text-3xl text-center" id="price-list-title">가격표</h2>
       </div>
 
-      <!-- Price List -->
-      <div class="price-list">
-        <div class="section-title" data-i18n="priceList">가격표</div>
-        <div id="priceItems"></div>
+      <!-- 상품 목록 -->
+      <div id="items-container" class="space-y-4 mb-6">
+        <!-- JavaScript로 동적 생성 -->
       </div>
 
-      <!-- Report Section -->
-      <div class="report-section">
-        <div class="report-title" data-i18n="reportTitle">🚨 가격 불일치 신고</div>
-        <div class="report-desc" data-i18n="reportDesc">실제 가격이 다르거나 카드결제를 거부하나요?</div>
-        <button class="report-btn" onclick="openReportModal()">
-          <span>⚠️</span>
-          <span data-i18n="reportBtn">신고하기</span>
+      <!-- 간단한 제보하기 버튼 -->
+      <div class="mb-8">
+        <button 
+          onclick="openReportDialog()"
+          class="w-full bg-[#E6A47D] text-white py-4 px-6 rounded-xl transition-all shadow-lg hover:bg-[#D69469] hover:shadow-xl"
+        >
+          <span class="text-xl sm:text-2xl" id="report-btn-text">🚨 제보하기</span>
         </button>
       </div>
-    </div>
 
-    <!-- Footer -->
-    <div class="footer">
-      <div class="footer-logo">MODIT</div>
-      <div class="footer-links">
-        <a href="https://www.baewadal.co.kr" class="footer-link" data-i18n="website">공식 웹사이트</a>
-        <a href="mailto:baewadal@baewadal.co.kr" class="footer-link" data-i18n="contact">문의하기</a>
+      <!-- 하단 안내 -->
+      <div class="text-center space-y-4">
+        <p class="text-sm sm:text-base text-gray-500">MODIT</p>
+        
+        <!-- 조회수와 최종 업데이트 -->
+        <div class="flex flex-row items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-500">
+          <div class="flex items-center gap-1 sm:gap-2">
+            <span id="view-count-label">조회수:</span>
+            <span class="text-[#E6A47D]" id="view-count">0</span>
+          </div>
+          <div class="h-3 w-px bg-gray-300"></div>
+          <div class="flex items-center gap-1 sm:gap-2">
+            <span id="last-updated-label">최종 업데이트:</span>
+            <span class="text-[#E6A47D]" id="last-updated">-</span>
+          </div>
+        </div>
+        
+        <p class="text-xs text-gray-400">© 2025 Baewadal. All rights reserved.</p>
       </div>
-      <div>&copy; 2025 Baewadal. All rights reserved.</div>
     </div>
   </div>
 
-  <!-- Report Modal -->
-  <div id="reportModal" class="modal">
+  <!-- 제보 다이얼로그 모달 -->
+  <div id="report-modal" class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title" data-i18n="reportFormTitle">고객 제보</h2>
-        <button class="close-btn" onclick="closeReportModal()">✕</button>
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900" id="modal-title">🚨 운영 불편 제보하기</h2>
+        <button onclick="closeReportDialog()" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
       </div>
       
-      <form id="reportForm">
-        <div class="form-group">
-          <label class="form-label" data-i18n="reportType">제보 유형 *</label>
-          <select id="reportType" class="form-input" required>
-            <option value="">선택해주세요</option>
-            <option value="price_diff" data-i18n="priceDiff">가격 불일치</option>
-            <option value="card_refusal" data-i18n="cardRefusal">카드결제 거부</option>
-            <option value="quality" data-i18n="quality">품질 문제</option>
-            <option value="service" data-i18n="service">서비스 문제</option>
-            <option value="other" data-i18n="other">기타</option>
-          </select>
+      <form id="report-form" onsubmit="submitReport(event)">
+        <!-- 점포명 표시 -->
+        <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+          <p class="text-sm text-gray-600">점포명</p>
+          <p class="text-lg font-bold text-gray-900" id="modal-store-name">-</p>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="itemName">상품명</label>
-          <input type="text" id="itemName" class="form-input" placeholder="">
+        
+        <!-- 제보 유형 선택 -->
+        <div class="mb-6">
+          <label class="block text-base font-semibold text-gray-900 mb-3" id="report-type-label">
+            제보 유형을 선택해주세요 *
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('price_display')">
+              <div class="text-2xl mb-1">💰</div>
+              <div class="text-sm font-semibold" id="type-price">가격·표시 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('product_quality')">
+              <div class="text-2xl mb-1">📦</div>
+              <div class="text-sm font-semibold" id="type-product">제품·품질 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('hygiene_safety')">
+              <div class="text-2xl mb-1">🧼</div>
+              <div class="text-sm font-semibold" id="type-hygiene">위생·안전 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('service_response')">
+              <div class="text-2xl mb-1">🤝</div>
+              <div class="text-sm font-semibold" id="type-service">서비스·응대 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('payment_receipt')">
+              <div class="text-2xl mb-1">💳</div>
+              <div class="text-sm font-semibold" id="type-payment">결제·영수증 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('illegal_harmful')">
+              <div class="text-2xl mb-1">⚠️</div>
+              <div class="text-sm font-semibold" id="type-illegal">불법·유해 행위 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('facility_environment')">
+              <div class="text-2xl mb-1">🏢</div>
+              <div class="text-sm font-semibold" id="type-facility">시설·환경 관련</div>
+            </button>
+            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('other')">
+              <div class="text-2xl mb-1">📝</div>
+              <div class="text-sm font-semibold" id="type-other">기타</div>
+            </button>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="description">상세 내용 *</label>
-          <textarea id="description" class="form-textarea" required placeholder=""></textarea>
+        
+        <!-- 상황 설명 -->
+        <div class="mb-4">
+          <label class="block text-base font-semibold text-gray-900 mb-2" id="description-label">
+            상황을 자세히 설명해주세요 *
+          </label>
+          <textarea 
+            id="report-description"
+            rows="4"
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E6A47D] focus:outline-none"
+            placeholder="예: 가격표와 실제 결제 금액이 다릅니다..."
+            required
+          ></textarea>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="reporterName">제보자명 (선택)</label>
-          <input type="text" id="reporterName" class="form-input" placeholder="">
+        
+        <!-- 익명 제보 체크박스 -->
+        <div class="mb-4">
+          <label class="flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              id="anonymous-checkbox"
+              class="w-5 h-5 text-[#E6A47D] border-gray-300 rounded focus:ring-[#E6A47D]"
+              onchange="toggleAnonymous()"
+            >
+            <span class="ml-3 text-base text-gray-900" id="anonymous-label">익명으로 제보하기</span>
+          </label>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" data-i18n="reporterContact">연락처 (선택)</label>
-          <input type="text" id="reporterContact" class="form-input" placeholder="">
+        
+        <!-- 제보자 정보 (익명 아닐 때만) -->
+        <div id="reporter-info" class="space-y-4 mb-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-900 mb-2" id="name-label">
+              제보자명
+            </label>
+            <input 
+              type="text"
+              id="reporter-name"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E6A47D] focus:outline-none"
+              placeholder="홍길동"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-900 mb-2" id="contact-label">
+              연락처
+            </label>
+            <input 
+              type="text"
+              id="reporter-contact"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E6A47D] focus:outline-none"
+              placeholder="010-1234-5678"
+            >
+          </div>
         </div>
-
-        <button type="submit" class="submit-btn" data-i18n="submit">제출하기</button>
+        
+        <!-- 제출 버튼 -->
+        <button 
+          type="submit"
+          class="w-full bg-[#E6A47D] text-white py-4 px-6 rounded-xl text-lg font-bold hover:bg-[#D69469] transition-all"
+          id="submit-btn"
+        >
+          제보하기
+        </button>
       </form>
     </div>
   </div>
 
-  <script src="script.js?v=1201"></script>
+  <!-- Toast 알림 -->
+  <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50" style="display: none;">
+    <span id="toast-message"></span>
+  </div>
+
+  <script src="script.js"></script>
+  
 </body>
 </html>
