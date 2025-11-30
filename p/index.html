@@ -1,316 +1,386 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>가격표 - MODIT</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <style>
-    body {
-      background-color: #FAF9F7;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    
-    .gradient-header {
-      background: linear-gradient(to bottom, #ffffff, #fafafa);
-    }
-    
-    .gradient-card {
-      background: linear-gradient(to bottom right, #ffffff, #fefefe);
-    }
-    
-    .shadow-soft {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-    
-    .loading-spinner {
-      border: 4px solid #E6A47D;
-      border-top-color: transparent;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* 모달 스타일 */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    
-    .modal-overlay.active {
-      display: flex;
-    }
-    
-    .modal-content {
-      background: white;
-      border-radius: 16px;
-      max-width: 600px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 24px;
-    }
-    
-    .report-type-btn {
-      transition: all 0.2s;
-    }
-    
-    .report-type-btn:hover {
-      transform: translateY(-2px);
-    }
-    
-    .report-type-btn.selected {
-      border-color: #E6A47D;
-      background-color: #FFF5EE;
-    }
-  </style>
-</head>
-<body>
-  
-  <!-- 로딩 화면 -->
-  <div id="loading-screen" class="min-h-screen flex items-center justify-center">
-    <div class="text-center bg-white p-10 rounded-3xl border-4 border-[#E6A47D]">
-      <div class="loading-spinner mx-auto mb-6"></div>
-      <p class="text-2xl text-gray-600">가격표를 불러오는 중...</p>
-    </div>
-  </div>
-  
-  <!-- 에러 화면 -->
-  <div id="error-screen" class="min-h-screen flex items-center justify-center px-6" style="display: none;">
-    <div class="text-center max-w-md mx-auto">
-      <div class="text-red-500 text-6xl mb-6">⚠️</div>
-      <p class="text-3xl text-gray-900 mb-4">가격표를 찾을 수 없습니다</p>
-      <p class="text-xl text-gray-600 mb-4">오류가 발생했습니다</p>
-      <div id="error-message" class="mt-6 p-4 bg-red-50 rounded-xl border border-red-200 text-left"></div>
-    </div>
-  </div>
-  
-  <!-- 메인 콘텐츠 -->
-  <div id="main-content" style="display: none;">
-    <!-- 헤더 -->
-    <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-        <!-- 환영 메시지 -->
-        <div class="text-center mb-4">
-          <h1 class="text-2xl sm:text-3xl text-[#E6A47D] mb-2" id="welcome-message">전통시장에 와주셔서 감사합니다</h1>
-        </div>
+/* =====================================================================
+   MODIT – Public Price Viewer + Report System (script.js)
+   Author: Baewadal Co., Ltd.
+   ===================================================================== */
 
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center">
-            <h2 class="text-xl sm:text-2xl text-gray-900" id="store-name">점포명</h2>
-          </div>
-        </div>
+document.addEventListener('DOMContentLoaded', () => {
+  console.log("✅ DOM 로드 완료 — 스크립트 초기화 시작");
 
-        <!-- 언어 선택 -->
-        <div class="flex gap-2">
-          <button onclick="changeLanguage('ko')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-[#E6A47D] text-white">
-            한국어
-          </button>
-          <button onclick="changeLanguage('en')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
-            English
-          </button>
-          <button onclick="changeLanguage('zh')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
-            中文
-          </button>
-          <button onclick="changeLanguage('ja')" class="language-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">
-            日本語
-          </button>
+  /* ======================
+     환경 변수
+     ====================== */
+  const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
+
+  let currentLanguage = 'ko';
+  let priceListData = null;
+  let selectedReportType = null;
+
+  /* ======================
+     번역
+     ====================== */
+  const TRANSLATIONS = {
+    ko: {
+      welcome: '전통시장에 와주셔서 감사합니다',
+      title: '가격표',
+      price: '가격',
+      unit: '단위',
+      description: '설명',
+      viewCount: '조회수',
+      lastUpdated: '최종 업데이트',
+      reportBtn: '🚨 제보하기',
+      modalTitle: '🚨 운영 불편 제보하기',
+      reportTypeLabel: '제보 유형을 선택해주세요 *',
+      descriptionLabel: '상황을 자세히 설명해주세요 *',
+      anonymousLabel: '익명으로 제보하기',
+      nameLabel: '제보자명',
+      contactLabel: '연락처',
+      submitBtn: '제보하기',
+      typePriceDisplay: '가격·표시 관련',
+      typeProductQuality: '제품·품질 관련',
+      typeHygieneSafety: '위생·안전 관련',
+      typeServiceResponse: '서비스·응대 관련',
+      typePaymentReceipt: '결제·영수증 관련',
+      typeIllegalHarmful: '불법·유해 행위 관련',
+      typeFacilityEnvironment: '시설·환경 관련',
+      typeOther: '기타',
+      noItems: '등록된 상품이 없습니다.'
+    },
+    en: {
+      welcome: 'Thank you for visiting the traditional market',
+      title: 'Price List',
+      price: 'Price',
+      unit: 'Unit',
+      description: 'Description',
+      viewCount: 'Views',
+      lastUpdated: 'Last Updated',
+      reportBtn: '🚨 Report',
+      modalTitle: '🚨 Report Issue',
+      reportTypeLabel: 'Select report type *',
+      descriptionLabel: 'Please describe the situation *',
+      anonymousLabel: 'Report anonymously',
+      nameLabel: 'Your name',
+      contactLabel: 'Contact',
+      submitBtn: 'Submit',
+      typePriceDisplay: 'Price/Display',
+      typeProductQuality: 'Product/Quality',
+      typeHygieneSafety: 'Hygiene/Safety',
+      typeServiceResponse: 'Service/Response',
+      typePaymentReceipt: 'Payment/Receipt',
+      typeIllegalHarmful: 'Illegal/Harmful',
+      typeFacilityEnvironment: 'Facility/Environment',
+      typeOther: 'Other',
+      noItems: 'No items registered.'
+    },
+    zh: {
+      welcome: '感谢您访问传统市场',
+      title: '价格表',
+      price: '价格',
+      unit: '单位',
+      description: '说明',
+      viewCount: '浏览次数',
+      lastUpdated: '最后更新',
+      reportBtn: '🚨 举报',
+      modalTitle: '🚨 举报问题',
+      reportTypeLabel: '请选择举报类型 *',
+      descriptionLabel: '请详细说明情况 *',
+      anonymousLabel: '匿名举报',
+      nameLabel: '您的姓名',
+      contactLabel: '联系方式',
+      submitBtn: '提交',
+      typePriceDisplay: '价格·标示',
+      typeProductQuality: '产品·质量',
+      typeHygieneSafety: '卫生·安全',
+      typeServiceResponse: '服务·应对',
+      typePaymentReceipt: '付款·收据',
+      typeIllegalHarmful: '非法·有害',
+      typeFacilityEnvironment: '设施·环境',
+      typeOther: '其他',
+      noItems: '没有注册的商品。'
+    },
+    ja: {
+      welcome: '伝統市場にお越しいただきありがとうございます',
+      title: '価格表',
+      price: '価格',
+      unit: '単位',
+      description: '説明',
+      viewCount: '閲覧数',
+      lastUpdated: '最終更新',
+      reportBtn: '🚨 報告',
+      modalTitle: '🚨 問題を報告',
+      reportTypeLabel: '報告タイプを選択してください *',
+      descriptionLabel: '状況を詳しく説明してください *',
+      anonymousLabel: '匿名で報告',
+      nameLabel: 'お名前',
+      contactLabel: '連絡先',
+      submitBtn: '送信',
+      typePriceDisplay: '価格·表示',
+      typeProductQuality: '製品·品質',
+      typeHygieneSafety: '衛生·安全',
+      typeServiceResponse: 'サービス·対応',
+      typePaymentReceipt: '決済·領収書',
+      typeIllegalHarmful: '違法·有害',
+      typeFacilityEnvironment: '施設·環境',
+      typeOther: 'その他',
+      noItems: '登録された商品がありません。'
+    }
+  };
+
+
+  /* ==========================================================
+     URL ID 추출
+     ========================================================== */
+  function getPriceListId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id") || params.get("priceListId");
+  }
+
+  /* ==========================================================
+     Toast
+     ========================================================== */
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    const msgBox = document.getElementById("toast-message");
+    msgBox.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 2500);
+  }
+
+  /* ==========================================================
+     언어 변경
+     ========================================================== */
+  function changeLanguage(lang) {
+    currentLanguage = lang;
+
+    document.querySelectorAll(".language-btn").forEach(btn => {
+      btn.classList.remove("bg-[#E6A47D]", "text-white");
+      btn.classList.add("bg-gray-100", "text-gray-600");
+    });
+
+    // 활성 버튼 자동 스타일 지정
+    const activeBtn = [...document.querySelectorAll(".language-btn")]
+      .find(btn => btn.textContent.trim().toLowerCase().startsWith(lang));
+
+    if (activeBtn) {
+      activeBtn.classList.add("bg-[#E6A47D]", "text-white");
+      activeBtn.classList.remove("bg-gray-100", "text-gray-600");
+    }
+
+    updateUIText();
+    if (priceListData) renderItems(priceListData.items);
+  }
+  window.changeLanguage = changeLanguage;
+
+
+  /* ==========================================================
+     UI 텍스트 업데이트
+     ========================================================== */
+  function updateUIText() {
+    const t = TRANSLATIONS[currentLanguage];
+
+    const mapping = {
+      "welcome-message": t.welcome,
+      "price-list-title": t.title,
+      "report-btn-text": t.reportBtn,
+      "modal-title": t.modalTitle,
+      "report-type-label": t.reportTypeLabel,
+      "description-label": t.descriptionLabel,
+      "anonymous-label": t.anonymousLabel,
+      "name-label": t.nameLabel,
+      "contact-label": t.contactLabel,
+      "submit-btn": t.submitBtn,
+      "type-price": t.typePriceDisplay,
+      "type-product": t.typeProductQuality,
+      "type-hygiene": t.typeHygieneSafety,
+      "type-service": t.typeServiceResponse,
+      "type-payment": t.typePaymentReceipt,
+      "type-illegal": t.typeIllegalHarmful,
+      "type-facility": t.typeFacilityEnvironment,
+      "type-other": t.typeOther,
+      "view-count-label": t.viewCount + ":",
+      "last-updated-label": t.lastUpdated + ":"
+    };
+
+    for (let id in mapping) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = mapping[id];
+    }
+  }
+
+  /* ==========================================================
+     가격표 로드
+     ========================================================== */
+  async function loadPriceList() {
+    const priceListId = getPriceListId();
+    if (!priceListId) return showError("가격표 ID가 없습니다.");
+
+    try {
+      const res = await fetch(`${API_BASE}/price-list/public/${priceListId}`, {
+        headers: { Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+      });
+
+      if (!res.ok) throw new Error("서버에서 가격표를 찾을 수 없습니다.");
+
+      const data = await res.json();
+
+      let obj = data.priceList;
+      if (typeof obj === "string") obj = JSON.parse(obj);
+
+      priceListData = obj;
+
+      document.getElementById("store-name").textContent = obj.storeName;
+      document.getElementById("modal-store-name").textContent = obj.storeName;
+      document.getElementById("view-count").textContent = data.viewCount || 0;
+      document.getElementById("last-updated").textContent =
+        new Date(obj.updatedAt).toLocaleString("ko-KR");
+
+      renderItems(obj.items);
+
+      document.getElementById("loading-screen").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+
+    } catch (err) {
+      showError(err.message);
+    }
+  }
+
+  /* ==========================================================
+     상품 출력
+     ========================================================== */
+  function renderItems(items = []) {
+    const container = document.getElementById("items-container");
+    const t = TRANSLATIONS[currentLanguage];
+
+    if (!items.length) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-8 border text-center">
+          <p class="text-xl text-gray-500">${t.noItems}</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = items.map(i => `
+      <div class="bg-white rounded-2xl p-5 border-2 hover:border-[#E6A47D] transition">
+        <h3 class="text-xl font-bold">${i.name}</h3>
+        ${i.description ? `<p class="text-gray-500 mt-1">${t.description}: ${i.description}</p>` : ""}
+        <div class="flex justify-between mt-4 border-t pt-3">
+          <span class="text-gray-600">${t.unit}: ${i.unit || "개"}</span>
+          <span class="text-2xl text-[#E6A47D]">${Number(i.price).toLocaleString()}원</span>
         </div>
       </div>
-    </div>
+    `).join("");
+  }
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-      <!-- 가격표 제목 -->
-      <div class="bg-white rounded-2xl p-4 sm:p-6 mb-6 border-2 border-[#E6A47D]/30">
-        <h2 class="text-2xl sm:text-3xl text-center" id="price-list-title">가격표</h2>
-      </div>
 
-      <!-- 상품 목록 -->
-      <div id="items-container" class="space-y-4 mb-6">
-        <!-- JavaScript로 동적 생성 -->
-      </div>
+  /* ==========================================================
+     오류 화면
+     ========================================================== */
+  function showError(msg) {
+    document.getElementById("loading-screen").style.display = "none";
+    document.getElementById("error-screen").style.display = "flex";
+    document.getElementById("error-message").innerHTML =
+      `<p class="text-red-700">${msg}</p>`;
+  }
 
-      <!-- 간단한 제보하기 버튼 -->
-      <div class="mb-8">
-        <button 
-          onclick="openReportDialog()"
-          class="w-full bg-[#E6A47D] text-white py-4 px-6 rounded-xl transition-all shadow-lg hover:bg-[#D69469] hover:shadow-xl"
-        >
-          <span class="text-xl sm:text-2xl" id="report-btn-text">🚨 제보하기</span>
-        </button>
-      </div>
+  /* ==========================================================
+     모달 제어
+     ========================================================== */
+  function openReportDialog() {
+    document.getElementById("report-modal").classList.add("active");
+  }
+  function closeReportDialog() {
+    document.getElementById("report-modal").classList.remove("active");
+    document.getElementById("report-form").reset();
+    selectedReportType = null;
 
-      <!-- 하단 안내 -->
-      <div class="text-center space-y-4">
-        <p class="text-sm sm:text-base text-gray-500">MODIT</p>
-        
-        <!-- 조회수와 최종 업데이트 -->
-        <div class="flex flex-row items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-500">
-          <div class="flex items-center gap-1 sm:gap-2">
-            <span id="view-count-label">조회수:</span>
-            <span class="text-[#E6A47D]" id="view-count">0</span>
-          </div>
-          <div class="h-3 w-px bg-gray-300"></div>
-          <div class="flex items-center gap-1 sm:gap-2">
-            <span id="last-updated-label">최종 업데이트:</span>
-            <span class="text-[#E6A47D]" id="last-updated">-</span>
-          </div>
-        </div>
-        
-        <p class="text-xs text-gray-400">© 2025 Baewadal. All rights reserved.</p>
-      </div>
-    </div>
-  </div>
+    document.querySelectorAll(".report-type-btn").forEach(el =>
+      el.classList.remove("selected")
+    );
+  }
+  window.openReportDialog = openReportDialog;
+  window.closeReportDialog = closeReportDialog;
 
-  <!-- 제보 다이얼로그 모달 -->
-  <div id="report-modal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-900" id="modal-title">🚨 운영 불편 제보하기</h2>
-        <button onclick="closeReportDialog()" class="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
-      </div>
-      
-      <form id="report-form" onsubmit="submitReport(event)">
-        <!-- 점포명 표시 -->
-        <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-          <p class="text-sm text-gray-600">점포명</p>
-          <p class="text-lg font-bold text-gray-900" id="modal-store-name">-</p>
-        </div>
-        
-        <!-- 제보 유형 선택 -->
-        <div class="mb-6">
-          <label class="block text-base font-semibold text-gray-900 mb-3" id="report-type-label">
-            제보 유형을 선택해주세요 *
-          </label>
-          <div class="grid grid-cols-2 gap-3">
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('price_display')">
-              <div class="text-2xl mb-1">💰</div>
-              <div class="text-sm font-semibold" id="type-price">가격·표시 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('product_quality')">
-              <div class="text-2xl mb-1">📦</div>
-              <div class="text-sm font-semibold" id="type-product">제품·품질 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('hygiene_safety')">
-              <div class="text-2xl mb-1">🧼</div>
-              <div class="text-sm font-semibold" id="type-hygiene">위생·안전 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('service_response')">
-              <div class="text-2xl mb-1">🤝</div>
-              <div class="text-sm font-semibold" id="type-service">서비스·응대 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('payment_receipt')">
-              <div class="text-2xl mb-1">💳</div>
-              <div class="text-sm font-semibold" id="type-payment">결제·영수증 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('illegal_harmful')">
-              <div class="text-2xl mb-1">⚠️</div>
-              <div class="text-sm font-semibold" id="type-illegal">불법·유해 행위 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('facility_environment')">
-              <div class="text-2xl mb-1">🏢</div>
-              <div class="text-sm font-semibold" id="type-facility">시설·환경 관련</div>
-            </button>
-            <button type="button" class="report-type-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:shadow-md" onclick="selectReportType('other')">
-              <div class="text-2xl mb-1">📝</div>
-              <div class="text-sm font-semibold" id="type-other">기타</div>
-            </button>
-          </div>
-        </div>
-        
-        <!-- 상황 설명 -->
-        <div class="mb-4">
-          <label class="block text-base font-semibold text-gray-900 mb-2" id="description-label">
-            상황을 자세히 설명해주세요 *
-          </label>
-          <textarea 
-            id="report-description"
-            rows="4"
-            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E6A47D] focus:outline-none"
-            placeholder="예: 가격표와 실제 결제 금액이 다릅니다..."
-            required
-          ></textarea>
-        </div>
-        
-        <!-- 익명 제보 체크박스 -->
-        <div class="mb-4">
-          <label class="flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              id="anonymous-checkbox"
-              class="w-5 h-5 text-[#E6A47D] border-gray-300 rounded focus:ring-[#E6A47D]"
-              onchange="toggleAnonymous()"
-            >
-            <span class="ml-3 text-base text-gray-900" id="anonymous-label">익명으로 제보하기</span>
-          </label>
-        </div>
-        
-        <!-- 제보자 정보 (익명 아닐 때만) -->
-        <div id="reporter-info" class="space-y-4 mb-6">
-          <div>
-            <label class="block text-sm font-semibold text-gray-900 mb-2" id="name-label">
-              제보자명
-            </label>
-            <input 
-              type="text"
-              id="reporter-name"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E6A47D] focus:outline-none"
-              placeholder="홍길동"
-            >
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-900 mb-2" id="contact-label">
-              연락처
-            </label>
-            <input 
-              type="text"
-              id="reporter-contact"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E6A47D] focus:outline-none"
-              placeholder="010-1234-5678"
-            >
-          </div>
-        </div>
-        
-        <!-- 제출 버튼 -->
-        <button 
-          type="submit"
-          class="w-full bg-[#E6A47D] text-white py-4 px-6 rounded-xl text-lg font-bold hover:bg-[#D69469] transition-all"
-          id="submit-btn"
-        >
-          제보하기
-        </button>
-      </form>
-    </div>
-  </div>
+  /* ==========================================================
+     제보 유형 선택
+     ========================================================== */
+  function selectReportType(type) {
+    selectedReportType = type;
 
-  <!-- Toast 알림 -->
-  <div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50" style="display: none;">
-    <span id="toast-message"></span>
-  </div>
+    document.querySelectorAll(".report-type-btn").forEach(btn =>
+      btn.classList.remove("selected")
+    );
 
-  <script src="script.js"></script>
-  
-</body>
-</html>
+    // 클릭된 버튼 자동 찾아서 강조
+    const btn = [...document.querySelectorAll(".report-type-btn")].find(
+      b => b.getAttribute("onclick")?.includes(type)
+    );
+
+    if (btn) btn.classList.add("selected");
+  }
+  window.selectReportType = selectReportType;
+
+  /* ==========================================================
+     익명 토글
+     ========================================================== */
+  function toggleAnonymous() {
+    const checked = document.getElementById("anonymous-checkbox").checked;
+    document.getElementById("reporter-info").style.display = checked ? "none" : "block";
+  }
+  window.toggleAnonymous = toggleAnonymous;
+
+  /* ==========================================================
+     제보 제출
+     ========================================================== */
+  async function submitReport(event) {
+    event.preventDefault();
+
+    if (!selectedReportType)
+      return showToast("제보 유형을 선택해주세요.");
+
+    const description = document.getElementById("report-description").value.trim();
+    if (!description) return showToast("상황 설명을 입력해주세요.");
+
+    const isAnonymous = document.getElementById("anonymous-checkbox").checked;
+
+    const reportData = {
+      priceListId: priceListData.id,
+      storeName: priceListData.storeName,
+      storeUserId: priceListData.userId,
+      reportType: selectedReportType,
+      description,
+      isAnonymous,
+      reporterName: isAnonymous ? null : document.getElementById("reporter-name").value.trim(),
+      reporterContact: isAnonymous ? null : document.getElementById("reporter-contact").value.trim(),
+      userAgent: navigator.userAgent,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/report`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(reportData)
+      });
+
+      if (!res.ok) throw new Error("제보 제출 실패");
+
+      showToast("제보가 접수되었습니다.");
+      closeReportDialog();
+
+    } catch (err) {
+      console.error(err);
+      showToast("서버 오류가 발생했습니다.");
+    }
+  }
+  window.submitReport = submitReport;
+
+  /* ==========================================================
+     초기 실행
+     ========================================================== */
+  updateUIText();
+  loadPriceList();
+});
