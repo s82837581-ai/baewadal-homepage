@@ -263,6 +263,8 @@ async function loadPriceList() {
     
     viewCount = priceListData.views;
     
+    console.log('🎨 렌더링 데이터:', priceListData);
+    
     // UI 업데이트
     const storeNameEl = document.getElementById('store-name');
     const viewCountEl = document.getElementById('view-count');
@@ -285,7 +287,22 @@ async function loadPriceList() {
     
   } catch (error) {
     console.error('❌ 가격표 로드 실패:', error);
-    showError(error.message);
+    
+    // 로딩 화면만 숨기기
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    
+    // 에러 화면 표시
+    const errorScreen = document.getElementById('error-screen');
+    const errorMessage = document.getElementById('error-message');
+    
+    if (errorScreen) errorScreen.style.display = 'flex';
+    if (errorMessage) {
+      errorMessage.innerHTML = `
+        <p class="text-lg text-red-800 mb-2">오류 상세:</p>
+        <p class="text-base text-red-600">${error.message}</p>
+      `;
+    }
   }
 }
 
