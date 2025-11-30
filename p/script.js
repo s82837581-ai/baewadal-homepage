@@ -8,7 +8,7 @@
    ====================== */
 
 // ✅ 짧은 URL 사용 (외부 도메인용)
-const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
+const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/server/make-server-f49b8637/v2";
 
 // ✅ Supabase Public Anon Key
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
