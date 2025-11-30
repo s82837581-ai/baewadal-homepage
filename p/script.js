@@ -7,10 +7,10 @@
 설정 (환경 변수)
    ====================== */
 
-// ✅ 수정됨: 올바른 API 경로
-const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/modit-api-v2";
+// ✅ 짧은 URL 사용 (외부 도메인용)
+const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
 
-// ✅ Supabase Public Anon Key (공개 키이므로 노출되어도 안전함)
+// ✅ Supabase Public Anon Key
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
 
 // 다국어 번역 테이블
@@ -83,7 +83,7 @@ const translations = {
 document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
-  applyLanguage("ko"); // 기본 한국어
+  applyLanguage("ko");
 
   const params = new URLSearchParams(window.location.search);
   const priceListId = params.get("id");
@@ -93,7 +93,6 @@ async function initPage() {
     return;
   }
 
-  // 가격정보 로딩 시작
   try {
     const priceData = await fetchPriceList(priceListId);
     if (!priceData) {
@@ -122,7 +121,6 @@ function applyLanguage(lang) {
     if (dict[key]) el.textContent = dict[key];
   });
 
-  // 버튼 active 처리
   document.querySelectorAll(".lang-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.lang === lang);
   });
@@ -142,7 +140,6 @@ API 호출 함수
 async function fetchPriceList(priceListId) {
   const url = `${API_BASE}/price-list/public/${priceListId}`;
 
-  // ✅ Authorization 헤더에 Public Anon Key 포함
   const res = await fetch(url, {
     headers: {
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
@@ -158,9 +155,7 @@ async function fetchPriceList(priceListId) {
   const data = await res.json();
   console.log("📦 서버 응답 데이터:", data);
   
-  // ✅ 서버 응답 구조에 맞게 데이터 추출
   if (data.success && data.priceList) {
-    // priceList가 문자열인 경우 파싱
     let priceListData = data.priceList;
     if (typeof priceListData === 'string') {
       priceListData = JSON.parse(priceListData);
@@ -176,7 +171,7 @@ async function fetchPriceList(priceListId) {
 }
 
 async function submitReport(payload) {
-  const res = await fetch(`${API_BASE}/report/submit`, {
+  const res = await fetch(`${API_BASE}/report`, {
     method: "POST",
     headers: { 
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
