@@ -4,11 +4,14 @@
    ===================================================================== */
 
 /* ======================
-설정 (환경 변수)
+   설정 (환경 변수)
    ====================== */
 
-// ✅ 짧은 URL 사용 (외부 도메인용)
-API_BASE_PATH: '/functions/v1/make-server-f49b8637/modit-api-v2'
+// ✅ API 경로 (Supabase Edge Function)
+const API_BASE_PATH = '/functions/v1/make-server-f49b8637/modit-api-v2';
+
+// ✅ Supabase 프로젝트 URL
+const SUPABASE_URL = 'https://bauvetkqpvkaoybhcoqj.supabase.co';
 
 // ✅ Supabase Public Anon Key
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
