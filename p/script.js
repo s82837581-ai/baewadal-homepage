@@ -7,8 +7,11 @@
 설정 (환경 변수)
    ====================== */
 
-// ✅ 수정됨: 실제 Supabase API Endpoint
+// ✅ Supabase API Endpoint
 const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
+
+// ✅ Supabase Public Anon Key (공개 키이므로 노출되어도 안전함)
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
 
 // 다국어 번역 테이블
 const translations = {
@@ -99,10 +102,6 @@ async function initPage() {
     }
 
     renderPriceList(priceData);
-
-    // 조회수 증가 (이미 public API에서 자동 증가되지만 별도 호출도 가능)
-    // updateViewCount(priceListId);
-
   } catch (err) {
     showError("가격표를 불러오는 중 오류가 발생했습니다.");
     console.error(err);
@@ -143,7 +142,14 @@ API 호출 함수
 async function fetchPriceList(priceListId) {
   const url = `${API_BASE}/price-list/public/${priceListId}`;
 
-  const res = await fetch(url);
+  // ✅ Authorization 헤더에 Public Anon Key 포함
+  const res = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
   if (!res.ok) {
     console.error("API 호출 실패:", res.status, res.statusText);
     return null;
@@ -152,31 +158,30 @@ async function fetchPriceList(priceListId) {
   const data = await res.json();
   console.log("📦 서버 응답 데이터:", data);
   
-  // ✅ 수정: 서버 응답 구조에 맞게 데이터 추출
+  // ✅ 서버 응답 구조에 맞게 데이터 추출
   if (data.success && data.priceList) {
+    // priceList가 문자열인 경우 파싱
+    let priceListData = data.priceList;
+    if (typeof priceListData === 'string') {
+      priceListData = JSON.parse(priceListData);
+    }
+    
     return {
-      ...data.priceList,
-      views: data.viewCount || data.priceList.views || 0
+      ...priceListData,
+      views: data.viewCount || priceListData.views || 0
     };
   }
   
   return null;
 }
 
-async function updateViewCount(priceListId) {
-  try {
-    await fetch(`${API_BASE}/price-list/view/${priceListId}`, {
-      method: "POST"
-    });
-  } catch (err) {
-    console.warn("조회수 업데이트 실패");
-  }
-}
-
 async function submitReport(payload) {
   const res = await fetch(`${API_BASE}/report`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(payload),
   });
 
