@@ -7,8 +7,8 @@
 설정 (환경 변수)
    ====================== */
 
-// ✅ Supabase API Endpoint
-const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
+// ✅ 수정됨: 올바른 API 경로
+const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/modit-api-v2";
 
 // ✅ Supabase Public Anon Key (공개 키이므로 노출되어도 안전함)
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
@@ -176,7 +176,7 @@ async function fetchPriceList(priceListId) {
 }
 
 async function submitReport(payload) {
-  const res = await fetch(`${API_BASE}/report`, {
+  const res = await fetch(`${API_BASE}/report/submit`, {
     method: "POST",
     headers: { 
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
