@@ -1,286 +1,408 @@
-/* =====================================================================
-   MODIT – Public Price Viewer + Report System (script.js)
-   Author: Baewadal Co., Ltd.
-   ===================================================================== */
+// ⚙️ 설정 - 여기에 본인의 Supabase 정보를 입력하세요
+const CONFIG = {
+  SUPABASE_PROJECT_ID: 'bauvetkqpvkaoybhcoqj', // 예: 'abcdefghijklmnop'
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ"' // Supabase 프로젝트의 anon key
+};
 
-/* ======================
-설정 (환경 변수)
-   ====================== */
+// 전역 변수
+let currentLanguage = 'ko';
+let priceListData = null;
+let viewCount = 0;
+let selectedReportType = null;
 
-// ✅ API 엔드포인트 (짧은 별칭 사용)
-const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
-
-// ✅ Supabase Public Anon Key
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
-
-// 다국어 번역 테이블
-const translations = {
+// 번역 데이터
+const TRANSLATIONS = {
   ko: {
-    tagline: "투명한 가격, 신뢰할 수 있는 거래",
-    loading: "가격표를 불러오는 중...",
-    error: "오류",
-    priceList: "가격표",
-    views: "조회수",
-    updated: "최종 업데이트",
-    reportTitle: "🚨 가격 불일치 신고",
-    reportDesc: "실제 가격이 다르거나 카드결제를 거부하나요?",
-    reportBtn: "신고하기",
-    reportFormTitle: "고객 제보",
-    reportType: "제보 유형 *",
-    priceDiff: "가격 불일치",
-    cardRefusal: "카드결제 거부",
-    quality: "품질 문제",
-    service: "서비스 문제",
-    other: "기타",
-    itemName: "상품명",
-    description: "상세 내용 *",
-    reporterName: "제보자명 (선택)",
-    reporterContact: "연락처 (선택)",
-    submit: "제출하기",
-    website: "공식 웹사이트",
-    contact: "문의하기",
+    welcome: '전통시장에 와주셔서 감사합니다',
+    title: '가격표',
+    price: '가격',
+    unit: '단위',
+    description: '설명',
+    viewCount: '조회수',
+    lastUpdated: '최종 업데이트',
+    reportBtn: '🚨 제보하기',
+    modalTitle: '🚨 운영 불편 제보하기',
+    reportTypeLabel: '제보 유형을 선택해주세요 *',
+    descriptionLabel: '상황을 자세히 설명해주세요 *',
+    anonymousLabel: '익명으로 제보하기',
+    nameLabel: '제보자명',
+    contactLabel: '연락처',
+    submitBtn: '제보하기',
+    typePriceDisplay: '가격·표시 관련',
+    typeProductQuality: '제품·품질 관련',
+    typeHygieneSafety: '위생·안전 관련',
+    typeServiceResponse: '서비스·응대 관련',
+    typePaymentReceipt: '결제·영수증 관련',
+    typeIllegalHarmful: '불법·유해 행위 관련',
+    typeFacilityEnvironment: '시설·환경 관련',
+    typeOther: '기타',
+    noItems: '등록된 상품이 없습니다.'
   },
   en: {
-    tagline: "Transparent pricing, trusted transactions",
-    loading: "Loading price list...",
-    error: "Error",
-    priceList: "Price List",
-    views: "Views",
-    updated: "Updated At",
-    reportTitle: "🚨 Report Price Issue",
-    reportDesc: "Incorrect price or card refusal?",
-    reportBtn: "Report",
-    reportFormTitle: "Customer Report",
-    reportType: "Report Type *",
-    priceDiff: "Price Mismatch",
-    cardRefusal: "Card Payment Refusal",
-    quality: "Quality Issue",
-    service: "Service Issue",
-    other: "Other",
-    itemName: "Item Name",
-    description: "Description *",
-    reporterName: "Reporter Name (optional)",
-    reporterContact: "Contact (optional)",
-    submit: "Submit",
-    website: "Official Website",
-    contact: "Contact",
+    welcome: 'Thank you for visiting the traditional market',
+    title: 'Price List',
+    price: 'Price',
+    unit: 'Unit',
+    description: 'Description',
+    viewCount: 'Views',
+    lastUpdated: 'Last Updated',
+    reportBtn: '🚨 Report',
+    modalTitle: '🚨 Report Issue',
+    reportTypeLabel: 'Select report type *',
+    descriptionLabel: 'Please describe the situation *',
+    anonymousLabel: 'Report anonymously',
+    nameLabel: 'Your name',
+    contactLabel: 'Contact',
+    submitBtn: 'Submit',
+    typePriceDisplay: 'Price/Display',
+    typeProductQuality: 'Product/Quality',
+    typeHygieneSafety: 'Hygiene/Safety',
+    typeServiceResponse: 'Service/Response',
+    typePaymentReceipt: 'Payment/Receipt',
+    typeIllegalHarmful: 'Illegal/Harmful',
+    typeFacilityEnvironment: 'Facility/Environment',
+    typeOther: 'Other',
+    noItems: 'No items registered.'
   },
   zh: {
-    tagline: "透明价格，可信交易",
-    loading: "正在加载价格表...",
+    welcome: '感谢您访问传统市场',
+    title: '价格表',
+    price: '价格',
+    unit: '单位',
+    description: '说明',
+    viewCount: '浏览次数',
+    lastUpdated: '最后更新',
+    reportBtn: '🚨 举报',
+    modalTitle: '🚨 举报问题',
+    reportTypeLabel: '请选择举报类型 *',
+    descriptionLabel: '请详细说明情况 *',
+    anonymousLabel: '匿名举报',
+    nameLabel: '您的姓名',
+    contactLabel: '联系方式',
+    submitBtn: '提交',
+    typePriceDisplay: '价格·标示',
+    typeProductQuality: '产品·质量',
+    typeHygieneSafety: '卫生·安全',
+    typeServiceResponse: '服务·应对',
+    typePaymentReceipt: '付款·收据',
+    typeIllegalHarmful: '非法·有害',
+    typeFacilityEnvironment: '设施·环境',
+    typeOther: '其他',
+    noItems: '没有注册的商品。'
   },
   ja: {
-    tagline: "透明な価格、信頼できる取引",
-    loading: "価格表を読み込み中...",
+    welcome: '伝統市場にお越しいただきありがとうございます',
+    title: '価格表',
+    price: '価格',
+    unit: '単位',
+    description: '説明',
+    viewCount: '閲覧数',
+    lastUpdated: '最終更新',
+    reportBtn: '🚨 報告',
+    modalTitle: '🚨 問題を報告',
+    reportTypeLabel: '報告タイプを選択してください *',
+    descriptionLabel: '状況を詳しく説明してください *',
+    anonymousLabel: '匿名で報告',
+    nameLabel: 'お名前',
+    contactLabel: '連絡先',
+    submitBtn: '送信',
+    typePriceDisplay: '価格·表示',
+    typeProductQuality: '製品·品質',
+    typeHygieneSafety: '衛生·安全',
+    typeServiceResponse: 'サービス·対応',
+    typePaymentReceipt: '決済·領収書',
+    typeIllegalHarmful: '違法·有害',
+    typeFacilityEnvironment: '施設·環境',
+    typeOther: 'その他',
+    noItems: '登録された商品がありません。'
   }
 };
 
-
-/* ======================
-초기 로드
-   ====================== */
-
-document.addEventListener("DOMContentLoaded", initPage);
-
-async function initPage() {
-  applyLanguage("ko");
-
+// URL에서 가격표 ID 추출
+function getPriceListIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const priceListId = params.get("id");
+  return params.get('id') || params.get('priceListId');
+}
 
+// Toast 알림 표시
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toast-message');
+  toastMessage.textContent = message;
+  toast.style.display = 'block';
+  
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, duration);
+}
+
+// 언어 변경
+function changeLanguage(lang) {
+  currentLanguage = lang;
+  
+  // 버튼 스타일 업데이트
+  document.querySelectorAll('.language-btn').forEach(btn => {
+    btn.classList.remove('bg-[#E6A47D]', 'text-white');
+    btn.classList.add('bg-gray-100', 'text-gray-600');
+  });
+  
+  event.target.classList.remove('bg-gray-100', 'text-gray-600');
+  event.target.classList.add('bg-[#E6A47D]', 'text-white');
+  
+  // UI 텍스트 업데이트
+  updateUIText();
+  
+  // 상품 목록 다시 렌더링
+  if (priceListData) {
+    renderItems(priceListData.items);
+  }
+}
+
+// UI 텍스트 업데이트
+function updateUIText() {
+  const t = TRANSLATIONS[currentLanguage];
+  
+  document.getElementById('welcome-message').textContent = t.welcome;
+  document.getElementById('price-list-title').textContent = t.title;
+  document.getElementById('view-count-label').textContent = t.viewCount + ':';
+  document.getElementById('last-updated-label').textContent = t.lastUpdated + ':';
+  document.getElementById('report-btn-text').innerHTML = t.reportBtn;
+  document.getElementById('modal-title').textContent = t.modalTitle;
+  document.getElementById('report-type-label').textContent = t.reportTypeLabel;
+  document.getElementById('description-label').textContent = t.descriptionLabel;
+  document.getElementById('anonymous-label').textContent = t.anonymousLabel;
+  document.getElementById('name-label').textContent = t.nameLabel;
+  document.getElementById('contact-label').textContent = t.contactLabel;
+  document.getElementById('submit-btn').textContent = t.submitBtn;
+  
+  // 제보 유형 라벨
+  document.getElementById('type-price').textContent = t.typePriceDisplay;
+  document.getElementById('type-product').textContent = t.typeProductQuality;
+  document.getElementById('type-hygiene').textContent = t.typeHygieneSafety;
+  document.getElementById('type-service').textContent = t.typeServiceResponse;
+  document.getElementById('type-payment').textContent = t.typePaymentReceipt;
+  document.getElementById('type-illegal').textContent = t.typeIllegalHarmful;
+  document.getElementById('type-facility').textContent = t.typeFacilityEnvironment;
+  document.getElementById('type-other').textContent = t.typeOther;
+}
+
+// 가격표 데이터 로드
+async function loadPriceList() {
+  const priceListId = getPriceListIdFromUrl();
+  
   if (!priceListId) {
-    showError("유효하지 않은 접근입니다.");
+    showError('가격표 ID가 URL에 없습니다. 예: ?id=YOUR_PRICE_LIST_ID');
     return;
   }
-
+  
   try {
-    const priceData = await fetchPriceList(priceListId);
-    if (!priceData) {
-      showError("가격표를 찾을 수 없습니다.");
-      return;
-    }
-
-    renderPriceList(priceData);
-  } catch (err) {
-    showError("가격표를 불러오는 중 오류가 발생했습니다.");
-    console.error(err);
-  }
-}
-
-
-/* ======================
-다국어 적용 함수
-   ====================== */
-
-function applyLanguage(lang) {
-  const dict = translations[lang];
-  if (!dict) return;
-
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) el.textContent = dict[key];
-  });
-
-  document.querySelectorAll(".lang-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.lang === lang);
-  });
-}
-
-document.querySelectorAll(".lang-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    applyLanguage(btn.dataset.lang);
-  });
-});
-
-
-/* ======================
-API 호출 함수
-   ====================== */
-
-async function fetchPriceList(priceListId) {
-  const url = `${API_BASE}/price-list/public/${priceListId}`;
-
-  const res = await fetch(url, {
-    headers: {
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  
-  if (!res.ok) {
-    console.error("API 호출 실패:", res.status, res.statusText);
-    return null;
-  }
-
-  const data = await res.json();
-  console.log("📦 서버 응답 데이터:", data);
-  
-  if (data.success && data.priceList) {
-    let priceListData = data.priceList;
-    if (typeof priceListData === 'string') {
-      priceListData = JSON.parse(priceListData);
+    const url = `https://${CONFIG.SUPABASE_PROJECT_ID}.supabase.co/functions/v1/make-server-f49b8637/modit-api-v2/price-lists/public/${priceListId}`;
+    
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('가격표를 찾을 수 없습니다.');
     }
     
-    return {
-      ...priceListData,
-      views: data.viewCount || priceListData.views || 0
-    };
+    const data = await response.json();
+    
+    priceListData = data.priceList;
+    viewCount = data.viewCount || 0;
+    
+    // UI 업데이트
+    document.getElementById('store-name').textContent = priceListData.storeName || '점포명';
+    document.getElementById('view-count').textContent = viewCount;
+    document.getElementById('last-updated').textContent = new Date(priceListData.updatedAt).toLocaleDateString();
+    document.getElementById('modal-store-name').textContent = priceListData.storeName || '점포명';
+    
+    renderItems(priceListData.items || []);
+    
+    // 로딩 화면 숨기고 메인 콘텐츠 표시
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    
+  } catch (error) {
+    console.error('가격표 로드 실패:', error);
+    showError(error.message);
   }
-  
-  return null;
 }
 
-async function submitReport(payload) {
-  const res = await fetch(`${API_BASE}/report`, {
-    method: "POST",
-    headers: { 
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload),
-  });
-
-  return res.ok;
-}
-
-
-/* ======================
-가격표 렌더링
-   ====================== */
-
-function renderPriceList(data) {
-  console.log("🎨 렌더링 데이터:", data);
+// 상품 목록 렌더링
+function renderItems(items) {
+  const container = document.getElementById('items-container');
+  const t = TRANSLATIONS[currentLanguage];
   
-  document.getElementById("loading").style.display = "none";
-  document.getElementById("content").style.display = "block";
-
-  document.getElementById("storeName").textContent = data.storeName || "이름 없음";
-  document.getElementById("viewCount").textContent = data.views ?? 0;
-  document.getElementById("updatedAt").textContent = formatDate(data.updatedAt);
-
-  const container = document.getElementById("priceItems");
-  container.innerHTML = "";
-
-  (data.items || []).forEach(item => {
-    const el = document.createElement("div");
-    el.className = "price-item";
-
-    el.innerHTML = `
-      <div class="item-name">${item.name}</div>
-      <div class="item-price">${Number(item.price).toLocaleString()}원</div>
-      ${item.description ? `<div class="item-description">${item.description}</div>` : ""}
+  if (!items || items.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200">
+        <p class="text-2xl text-gray-500">${t.noItems}</p>
+      </div>
     `;
-
-    container.appendChild(el);
-  });
-}
-
-
-/* ======================
-신고 모달 제어
-   ====================== */
-
-function openReportModal() {
-  document.getElementById("reportModal").classList.add("active");
-}
-
-function closeReportModal() {
-  document.getElementById("reportModal").classList.remove("active");
-}
-
-
-/* ======================
-신고 제출
-   ====================== */
-
-document.getElementById("reportForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const params = new URLSearchParams(window.location.search);
-  const priceListId = params.get("id");
-
-  const payload = {
-    priceListId,
-    reportType: document.getElementById("reportType").value,
-    itemName: document.getElementById("itemName").value,
-    description: document.getElementById("description").value,
-    reporterName: document.getElementById("reporterName").value,
-    reporterContact: document.getElementById("reporterContact").value,
-    userAgent: navigator.userAgent,
-    timestamp: new Date().toISOString()
-  };
-
-  if (!payload.reportType || !payload.description) {
-    alert("필수 항목을 입력해주세요.");
     return;
   }
+  
+  container.innerHTML = items.map(item => `
+    <div class="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 hover:border-[#E6A47D] transition-colors">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <h3 class="text-xl sm:text-2xl mb-2">${item.name}</h3>
+          ${item.description ? `
+            <p class="text-base sm:text-lg text-gray-600">
+              ${t.description}: ${item.description}
+            </p>
+          ` : ''}
+        </div>
+      </div>
+      
+      <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+        <span class="text-base sm:text-lg text-gray-600">
+          ${t.unit}: ${item.unit}
+        </span>
+        <div class="text-right">
+          <div class="text-base sm:text-xl text-gray-600 mb-1">${t.price}</div>
+          <div class="text-2xl sm:text-3xl text-[#E6A47D]">
+            ${formatPrice(item.price)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
 
-  const ok = await submitReport(payload);
-
-  if (ok) {
-    alert("제보가 접수되었습니다. 감사합니다.");
-    closeReportModal();
-    document.getElementById("reportForm").reset();
+// 가격 포맷팅
+function formatPrice(price) {
+  if (currentLanguage === 'ko') {
+    return `${price.toLocaleString()}원`;
   } else {
-    alert("제보 제출에 실패했습니다. 다시 시도해주세요.");
+    return `₩${price.toLocaleString()}`;
   }
-});
-
-
-/* ======================
-공용 함수
-   ====================== */
-
-function showError(msg) {
-  document.getElementById("loading").style.display = "none";
-  document.getElementById("error").style.display = "block";
-  document.getElementById("error-message").textContent = msg;
 }
 
-function formatDate(date) {
+// 에러 화면 표시
+function showError(message) {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('error-screen').style.display = 'flex';
+  document.getElementById('error-message').innerHTML = `
+    <p class="text-lg text-red-800 mb-2">오류 상세:</p>
+    <p class="text-base text-red-600">${message}</p>
+  `;
+}
+
+// 제보 다이얼로그 열기
+function openReportDialog() {
+  document.getElementById('report-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// 제보 다이얼로그 닫기
+function closeReportDialog() {
+  document.getElementById('report-modal').classList.remove('active');
+  document.body.style.overflow = 'auto';
+  
+  // 폼 초기화
+  document.getElementById('report-form').reset();
+  selectedReportType = null;
+  document.querySelectorAll('.report-type-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  document.getElementById('reporter-info').style.display = 'block';
+}
+
+// 제보 유형 선택
+function selectReportType(type) {
+  selectedReportType = type;
+  
+  // 모든 버튼 선택 해제
+  document.querySelectorAll('.report-type-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  
+  // 선택한 버튼 강조
+  event.target.closest('.report-type-btn').classList.add('selected');
+}
+
+// 익명 토글
+function toggleAnonymous() {
+  const isAnonymous = document.getElementById('anonymous-checkbox').checked;
+  const reporterInfo = document.getElementById('reporter-info');
+  
+  if (isAnonymous) {
+    reporterInfo.style.display = 'none';
+  } else {
+    reporterInfo.style.display = 'block';
+  }
+}
+
+// 제보 제출
+async function submitReport(event) {
+  event.preventDefault();
+  
+  // 유효성 검사
+  if (!selectedReportType) {
+    showToast('제보 유형을 선택해주세요.');
+    return;
+  }
+  
+  const description = document.getElementById('report-description').value.trim();
+  if (!description) {
+    showToast('상황 설명을 입력해주세요.');
+    return;
+  }
+  
+  const isAnonymous = document.getElementById('anonymous-checkbox').checked;
+  const reporterName = isAnonymous ? null : document.getElementById('reporter-name').value.trim();
+  const reporterContact = isAnonymous ? null : document.getElementById('reporter-contact').value.trim();
+  
+  // 제보 데이터 생성
+  const reportData = {
+    priceListId: priceListData.id,
+    storeName: priceListData.storeName,
+    storeUserId: priceListData.userId,
+    reportType: selectedReportType,
+    description: description,
+    isAnonymous: isAnonymous,
+    reporterName: reporterName,
+    reporterContact: reporterContact,
+    submittedAt: new Date().toISOString()
+  };
+  
   try {
-    return new Date(date).toLocaleString("ko-KR");
-  } catch {
-    return "정보 없음";
+    const url = `https://${CONFIG.SUPABASE_PROJECT_ID}.supabase.co/functions/v1/make-server-f49b8637/modit-api-v2/customer-reports`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(reportData)
+    });
+    
+    if (!response.ok) {
+      throw new Error('제보 제출 실패');
+    }
+    
+    showToast('제보가 접수되었습니다. 감사합니다!');
+    closeReportDialog();
+    
+  } catch (error) {
+    console.error('제보 제출 실패:', error);
+    showToast('제보 제출 중 오류가 발생했습니다.');
   }
 }
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', () => {
+  // Lucide 아이콘 초기화
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+  
+  // 가격표 데이터 로드
+  loadPriceList();
+});
