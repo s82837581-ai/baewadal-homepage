@@ -143,12 +143,12 @@ function getPriceListIdFromUrl() {
 function showToast(message, duration = 3000) {
   const toast = document.getElementById('toast');
   const toastMessage = document.getElementById('toast-message');
-  
+
   if (!toast || !toastMessage) return;
-  
+
   toastMessage.textContent = message;
   toast.style.display = 'block';
-  
+
   setTimeout(() => {
     toast.style.display = 'none';
   }, duration);
@@ -157,24 +157,31 @@ function showToast(message, duration = 3000) {
 /* ======================
    언어 변경
    ====================== */
-
-function changeLanguage(lang) {
+/**
+ * HTML 예시:
+ * <button class="language-btn" onclick="changeLanguage('ko', this)">한국어</button>
+ */
+function changeLanguage(lang, element) {
   currentLanguage = lang;
-  
-  // 버튼 스타일 업데이트
-  document.querySelectorAll('.language-btn').forEach(btn => {
+
+  // 버튼 스타일 초기화
+  const langButtons = document.querySelectorAll('.language-btn');
+  langButtons.forEach(btn => {
     btn.classList.remove('bg-[#E6A47D]', 'text-white');
     btn.classList.add('bg-gray-100', 'text-gray-600');
   });
-  
-  event.target.classList.remove('bg-gray-100', 'text-gray-600');
-  event.target.classList.add('bg-[#E6A47D]', 'text-white');
-  
+
+  // 클릭된 버튼 강조
+  if (element) {
+    element.classList.remove('bg-gray-100', 'text-gray-600');
+    element.classList.add('bg-[#E6A47D]', 'text-white');
+  }
+
   // UI 텍스트 업데이트
   updateUIText();
-  
+
   // 상품 목록 다시 렌더링
-  if (priceListData) {
+  if (priceListData && Array.isArray(priceListData.items)) {
     renderItems(priceListData.items);
   }
 }
@@ -185,7 +192,7 @@ function changeLanguage(lang) {
 
 function updateUIText() {
   const t = TRANSLATIONS[currentLanguage];
-  
+
   const elements = {
     'welcome-message': t.welcome,
     'price-list-title': t.title,
@@ -208,7 +215,7 @@ function updateUIText() {
     'type-facility': t.typeFacilityEnvironment,
     'type-other': t.typeOther
   };
-  
+
   Object.entries(elements).forEach(([id, text]) => {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
@@ -221,81 +228,81 @@ function updateUIText() {
 
 async function loadPriceList() {
   const priceListId = getPriceListIdFromUrl();
-  
+
   if (!priceListId) {
     showError('가격표 ID가 URL에 없습니다. 예: ?id=YOUR_PRICE_LIST_ID');
     return;
   }
-  
+
   try {
     const url = `${API_BASE}/price-list/public/${priceListId}`;
-    
+
     console.log('🔍 API 호출:', url);
-    
+
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         'Content-Type': 'application/json'
       }
     });
-    
+
     if (!response.ok) {
       throw new Error('가격표를 찾을 수 없습니다.');
     }
-    
+
     const data = await response.json();
     console.log('📦 서버 응답 데이터:', data);
-    
+
     if (!data.success || !data.priceList) {
       throw new Error('가격표 데이터가 없습니다.');
     }
-    
-    // priceList가 string일 수도 있어서 JSON.parse 처리
+
+    // priceList가 string일 수도 있어서 JSON.parse 처리 (3번/4번 보완사항 제외: try/catch는 추가하지 않음)
     let priceListObj = data.priceList;
     if (typeof priceListObj === 'string') {
       priceListObj = JSON.parse(priceListObj);
     }
-    
+
     priceListData = {
       ...priceListObj,
       views: data.viewCount || priceListObj.views || 0
     };
-    
+
     viewCount = priceListData.views;
-    
+
     console.log('🎨 렌더링 데이터:', priceListData);
-    
+
     // UI 업데이트
     const storeNameEl = document.getElementById('store-name');
     const viewCountEl = document.getElementById('view-count');
     const lastUpdatedEl = document.getElementById('last-updated');
     const modalStoreNameEl = document.getElementById('modal-store-name');
-    
+
     if (storeNameEl) storeNameEl.textContent = priceListData.storeName || '점포명';
     if (viewCountEl) viewCountEl.textContent = viewCount;
     if (lastUpdatedEl) lastUpdatedEl.textContent = formatDate(priceListData.updatedAt);
     if (modalStoreNameEl) modalStoreNameEl.textContent = priceListData.storeName || '점포명';
-    
+
     renderItems(priceListData.items || []);
-    
+
     // 로딩 화면 숨기고 메인 콘텐츠 표시
     const loadingScreen = document.getElementById('loading-screen');
     const mainContent = document.getElementById('main-content');
-    
+
     if (loadingScreen) loadingScreen.style.display = 'none';
     if (mainContent) mainContent.style.display = 'block';
-    
+
   } catch (error) {
     console.error('❌ 가격표 로드 실패:', error);
-    
+
     // 로딩 화면만 숨기기
     const loadingScreen = document.getElementById('loading-screen');
     if (loadingScreen) loadingScreen.style.display = 'none';
-    
+
     // 에러 화면 표시
     const errorScreen = document.getElementById('error-screen');
     const errorMessage = document.getElementById('error-message');
-    
+
     if (errorScreen) errorScreen.style.display = 'flex';
     if (errorMessage) {
       errorMessage.innerHTML = `
@@ -313,9 +320,9 @@ async function loadPriceList() {
 function renderItems(items) {
   const container = document.getElementById('items-container');
   if (!container) return;
-  
+
   const t = TRANSLATIONS[currentLanguage];
-  
+
   if (!items || items.length === 0) {
     container.innerHTML = `
       <div class="bg-white rounded-2xl p-8 text-center border-2 border-gray-200">
@@ -324,7 +331,7 @@ function renderItems(items) {
     `;
     return;
   }
-  
+
   container.innerHTML = items.map(item => `
     <div class="bg-white rounded-2xl p-4 sm:p-6 border-2 border-gray-200 hover:border-[#E6A47D] transition-colors">
       <div class="flex items-start justify-between mb-3">
@@ -337,7 +344,7 @@ function renderItems(items) {
           ` : ''}
         </div>
       </div>
-      
+
       <div class="flex items-center justify-between pt-4 border-t border-gray-200">
         <span class="text-base sm:text-lg text-gray-600">
           ${t.unit}: ${item.unit || '개'}
@@ -385,7 +392,7 @@ function showError(message) {
   const loadingScreen = document.getElementById('loading-screen');
   const errorScreen = document.getElementById('error-screen');
   const errorMessage = document.getElementById('error-message');
-  
+
   if (loadingScreen) loadingScreen.style.display = 'none';
   if (errorScreen) errorScreen.style.display = 'flex';
   if (errorMessage) {
@@ -417,17 +424,17 @@ function closeReportDialog() {
   if (modal) {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
-    
+
     // 폼 초기화
     const form = document.getElementById('report-form');
     if (form) form.reset();
-    
+
     selectedReportType = null;
-    
+
     document.querySelectorAll('.report-type-btn').forEach(btn => {
       btn.classList.remove('selected');
     });
-    
+
     const reporterInfo = document.getElementById('reporter-info');
     if (reporterInfo) reporterInfo.style.display = 'block';
   }
@@ -436,17 +443,22 @@ function closeReportDialog() {
 /* ======================
    제보 유형 선택
    ====================== */
-
-function selectReportType(type) {
+/**
+ * HTML 예시:
+ * <button class="report-type-btn" onclick="selectReportType('priceDisplay', this)">...</button>
+ */
+function selectReportType(type, element) {
   selectedReportType = type;
-  
+
   // 모든 버튼 선택 해제
   document.querySelectorAll('.report-type-btn').forEach(btn => {
     btn.classList.remove('selected');
   });
-  
+
   // 선택한 버튼 강조
-  event.target.closest('.report-type-btn').classList.add('selected');
+  if (element) {
+    element.classList.add('selected');
+  }
 }
 
 /* ======================
@@ -454,9 +466,9 @@ function selectReportType(type) {
    ====================== */
 
 function toggleAnonymous() {
-  const isAnonymous = document.getElementById('anonymous-checkbox').checked;
+  const isAnonymous = document.getElementById('anonymous-checkbox')?.checked;
   const reporterInfo = document.getElementById('reporter-info');
-  
+
   if (reporterInfo) {
     reporterInfo.style.display = isAnonymous ? 'none' : 'block';
   }
@@ -468,31 +480,31 @@ function toggleAnonymous() {
 
 async function submitReport(event) {
   event.preventDefault();
-  
+
   // 유효성 검사
   if (!selectedReportType) {
     showToast('제보 유형을 선택해주세요.');
     return;
   }
-  
+
   const descriptionEl = document.getElementById('report-description');
   const description = descriptionEl ? descriptionEl.value.trim() : '';
-  
+
   if (!description) {
     showToast('상황 설명을 입력해주세요.');
     return;
   }
-  
+
   const anonymousCheckbox = document.getElementById('anonymous-checkbox');
   const isAnonymous = anonymousCheckbox ? anonymousCheckbox.checked : false;
-  
+
   const reporterNameEl = document.getElementById('reporter-name');
   const reporterContactEl = document.getElementById('reporter-contact');
-  
+
   const reporterName = isAnonymous ? null : (reporterNameEl ? reporterNameEl.value.trim() : null);
   const reporterContact = isAnonymous ? null : (reporterContactEl ? reporterContactEl.value.trim() : null);
-  
-  // 제보 데이터 생성
+
+  // 제보 데이터 생성 (3번/4번 보완사항 제외: priceListData.id 검증 추가하지 않음)
   const reportData = {
     priceListId: priceListData.id,
     storeName: priceListData.storeName,
@@ -505,12 +517,12 @@ async function submitReport(event) {
     userAgent: navigator.userAgent,
     timestamp: new Date().toISOString()
   };
-  
+
   try {
     const url = `${API_BASE}/report`;
-    
+
     console.log('📤 제보 제출:', reportData);
-    
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -519,14 +531,14 @@ async function submitReport(event) {
       },
       body: JSON.stringify(reportData)
     });
-    
+
     if (!response.ok) {
       throw new Error('제보 제출 실패');
     }
-    
+
     showToast('제보가 접수되었습니다. 감사합니다!');
     closeReportDialog();
-    
+
   } catch (error) {
     console.error('❌ 제보 제출 실패:', error);
     showToast('제보 제출 중 오류가 발생했습니다.');
@@ -539,12 +551,15 @@ async function submitReport(event) {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('✅ 페이지 초기화 시작');
-  
+
   // Lucide 아이콘 초기화
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
   }
-  
+
+  // UI 텍스트 초기화
+  updateUIText();
+
   // 가격표 데이터 로드
   loadPriceList();
 });
