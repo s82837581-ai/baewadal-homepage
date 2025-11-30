@@ -1,8 +1,17 @@
-// ⚙️ 설정 - 여기에 본인의 Supabase 정보를 입력하세요
-const CONFIG = {
-  SUPABASE_PROJECT_ID: 'bauvetkqpvkaoybhcoqj', // 예: 'abcdefghijklmnop'
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ"' // Supabase 프로젝트의 anon key
-};
+/* =====================================================================
+   MODIT – Public Price Viewer + Report System (script.js)
+   Author: Baewadal Co., Ltd.
+   ===================================================================== */
+
+/* ======================
+   설정 (환경 변수)
+   ====================== */
+
+// ✅ API 엔드포인트
+const API_BASE = "https://bauvetkqpvkaoybhcoqj.supabase.co/functions/v1/make-server-f49b8637/v2";
+
+// ✅ Supabase Public Anon Key
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhdXZldGtxcHZrYW95Ymhjb3FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjA2MTQsImV4cCI6MjA0ODE5NjYxNH0.qVCJ5xSxkN4yMXxX0X59_z8vAVlBSHmUhcU83tpImCQ";
 
 // 전역 변수
 let currentLanguage = 'ko';
@@ -118,16 +127,25 @@ const TRANSLATIONS = {
   }
 };
 
-// URL에서 가격표 ID 추출
+/* ======================
+   URL에서 가격표 ID 추출
+   ====================== */
+
 function getPriceListIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get('id') || params.get('priceListId');
 }
 
-// Toast 알림 표시
+/* ======================
+   Toast 알림 표시
+   ====================== */
+
 function showToast(message, duration = 3000) {
   const toast = document.getElementById('toast');
   const toastMessage = document.getElementById('toast-message');
+  
+  if (!toast || !toastMessage) return;
+  
   toastMessage.textContent = message;
   toast.style.display = 'block';
   
@@ -136,7 +154,10 @@ function showToast(message, duration = 3000) {
   }, duration);
 }
 
-// 언어 변경
+/* ======================
+   언어 변경
+   ====================== */
+
 function changeLanguage(lang) {
   currentLanguage = lang;
   
@@ -158,35 +179,46 @@ function changeLanguage(lang) {
   }
 }
 
-// UI 텍스트 업데이트
+/* ======================
+   UI 텍스트 업데이트
+   ====================== */
+
 function updateUIText() {
   const t = TRANSLATIONS[currentLanguage];
   
-  document.getElementById('welcome-message').textContent = t.welcome;
-  document.getElementById('price-list-title').textContent = t.title;
-  document.getElementById('view-count-label').textContent = t.viewCount + ':';
-  document.getElementById('last-updated-label').textContent = t.lastUpdated + ':';
-  document.getElementById('report-btn-text').innerHTML = t.reportBtn;
-  document.getElementById('modal-title').textContent = t.modalTitle;
-  document.getElementById('report-type-label').textContent = t.reportTypeLabel;
-  document.getElementById('description-label').textContent = t.descriptionLabel;
-  document.getElementById('anonymous-label').textContent = t.anonymousLabel;
-  document.getElementById('name-label').textContent = t.nameLabel;
-  document.getElementById('contact-label').textContent = t.contactLabel;
-  document.getElementById('submit-btn').textContent = t.submitBtn;
+  const elements = {
+    'welcome-message': t.welcome,
+    'price-list-title': t.title,
+    'view-count-label': t.viewCount + ':',
+    'last-updated-label': t.lastUpdated + ':',
+    'report-btn-text': t.reportBtn,
+    'modal-title': t.modalTitle,
+    'report-type-label': t.reportTypeLabel,
+    'description-label': t.descriptionLabel,
+    'anonymous-label': t.anonymousLabel,
+    'name-label': t.nameLabel,
+    'contact-label': t.contactLabel,
+    'submit-btn': t.submitBtn,
+    'type-price': t.typePriceDisplay,
+    'type-product': t.typeProductQuality,
+    'type-hygiene': t.typeHygieneSafety,
+    'type-service': t.typeServiceResponse,
+    'type-payment': t.typePaymentReceipt,
+    'type-illegal': t.typeIllegalHarmful,
+    'type-facility': t.typeFacilityEnvironment,
+    'type-other': t.typeOther
+  };
   
-  // 제보 유형 라벨
-  document.getElementById('type-price').textContent = t.typePriceDisplay;
-  document.getElementById('type-product').textContent = t.typeProductQuality;
-  document.getElementById('type-hygiene').textContent = t.typeHygieneSafety;
-  document.getElementById('type-service').textContent = t.typeServiceResponse;
-  document.getElementById('type-payment').textContent = t.typePaymentReceipt;
-  document.getElementById('type-illegal').textContent = t.typeIllegalHarmful;
-  document.getElementById('type-facility').textContent = t.typeFacilityEnvironment;
-  document.getElementById('type-other').textContent = t.typeOther;
+  Object.entries(elements).forEach(([id, text]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  });
 }
 
-// 가격표 데이터 로드
+/* ======================
+   가격표 데이터 로드
+   ====================== */
+
 async function loadPriceList() {
   const priceListId = getPriceListIdFromUrl();
   
@@ -196,11 +228,13 @@ async function loadPriceList() {
   }
   
   try {
-    const url = `https://${CONFIG.SUPABASE_PROJECT_ID}.supabase.co/functions/v1/make-server-f49b8637/modit-api-v2/price-lists/public/${priceListId}`;
+    const url = `${API_BASE}/price-list/public/${priceListId}`;
+    
+    console.log('🔍 API 호출:', url);
     
     const response = await fetch(url, {
       headers: {
-        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         'Content-Type': 'application/json'
       }
     });
@@ -210,31 +244,59 @@ async function loadPriceList() {
     }
     
     const data = await response.json();
+    console.log('📦 서버 응답 데이터:', data);
     
-    priceListData = data.priceList;
-    viewCount = data.viewCount || 0;
+    if (!data.success || !data.priceList) {
+      throw new Error('가격표 데이터가 없습니다.');
+    }
+    
+    // priceList가 string일 수도 있어서 JSON.parse 처리
+    let priceListObj = data.priceList;
+    if (typeof priceListObj === 'string') {
+      priceListObj = JSON.parse(priceListObj);
+    }
+    
+    priceListData = {
+      ...priceListObj,
+      views: data.viewCount || priceListObj.views || 0
+    };
+    
+    viewCount = priceListData.views;
     
     // UI 업데이트
-    document.getElementById('store-name').textContent = priceListData.storeName || '점포명';
-    document.getElementById('view-count').textContent = viewCount;
-    document.getElementById('last-updated').textContent = new Date(priceListData.updatedAt).toLocaleDateString();
-    document.getElementById('modal-store-name').textContent = priceListData.storeName || '점포명';
+    const storeNameEl = document.getElementById('store-name');
+    const viewCountEl = document.getElementById('view-count');
+    const lastUpdatedEl = document.getElementById('last-updated');
+    const modalStoreNameEl = document.getElementById('modal-store-name');
+    
+    if (storeNameEl) storeNameEl.textContent = priceListData.storeName || '점포명';
+    if (viewCountEl) viewCountEl.textContent = viewCount;
+    if (lastUpdatedEl) lastUpdatedEl.textContent = formatDate(priceListData.updatedAt);
+    if (modalStoreNameEl) modalStoreNameEl.textContent = priceListData.storeName || '점포명';
     
     renderItems(priceListData.items || []);
     
     // 로딩 화면 숨기고 메인 콘텐츠 표시
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('main-content').style.display = 'block';
+    const loadingScreen = document.getElementById('loading-screen');
+    const mainContent = document.getElementById('main-content');
+    
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (mainContent) mainContent.style.display = 'block';
     
   } catch (error) {
-    console.error('가격표 로드 실패:', error);
+    console.error('❌ 가격표 로드 실패:', error);
     showError(error.message);
   }
 }
 
-// 상품 목록 렌더링
+/* ======================
+   상품 목록 렌더링
+   ====================== */
+
 function renderItems(items) {
   const container = document.getElementById('items-container');
+  if (!container) return;
+  
   const t = TRANSLATIONS[currentLanguage];
   
   if (!items || items.length === 0) {
@@ -261,7 +323,7 @@ function renderItems(items) {
       
       <div class="flex items-center justify-between pt-4 border-t border-gray-200">
         <span class="text-base sm:text-lg text-gray-600">
-          ${t.unit}: ${item.unit}
+          ${t.unit}: ${item.unit || '개'}
         </span>
         <div class="text-right">
           <div class="text-base sm:text-xl text-gray-600 mb-1">${t.price}</div>
@@ -274,46 +336,90 @@ function renderItems(items) {
   `).join('');
 }
 
-// 가격 포맷팅
+/* ======================
+   가격 포맷팅
+   ====================== */
+
 function formatPrice(price) {
   if (currentLanguage === 'ko') {
-    return `${price.toLocaleString()}원`;
+    return `${Number(price).toLocaleString()}원`;
   } else {
-    return `₩${price.toLocaleString()}`;
+    return `₩${Number(price).toLocaleString()}`;
   }
 }
 
-// 에러 화면 표시
+/* ======================
+   날짜 포맷팅
+   ====================== */
+
+function formatDate(date) {
+  try {
+    return new Date(date).toLocaleString('ko-KR');
+  } catch {
+    return '정보 없음';
+  }
+}
+
+/* ======================
+   에러 화면 표시
+   ====================== */
+
 function showError(message) {
-  document.getElementById('loading-screen').style.display = 'none';
-  document.getElementById('error-screen').style.display = 'flex';
-  document.getElementById('error-message').innerHTML = `
-    <p class="text-lg text-red-800 mb-2">오류 상세:</p>
-    <p class="text-base text-red-600">${message}</p>
-  `;
-}
-
-// 제보 다이얼로그 열기
-function openReportDialog() {
-  document.getElementById('report-modal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-// 제보 다이얼로그 닫기
-function closeReportDialog() {
-  document.getElementById('report-modal').classList.remove('active');
-  document.body.style.overflow = 'auto';
+  const loadingScreen = document.getElementById('loading-screen');
+  const errorScreen = document.getElementById('error-screen');
+  const errorMessage = document.getElementById('error-message');
   
-  // 폼 초기화
-  document.getElementById('report-form').reset();
-  selectedReportType = null;
-  document.querySelectorAll('.report-type-btn').forEach(btn => {
-    btn.classList.remove('selected');
-  });
-  document.getElementById('reporter-info').style.display = 'block';
+  if (loadingScreen) loadingScreen.style.display = 'none';
+  if (errorScreen) errorScreen.style.display = 'flex';
+  if (errorMessage) {
+    errorMessage.innerHTML = `
+      <p class="text-lg text-red-800 mb-2">오류 상세:</p>
+      <p class="text-base text-red-600">${message}</p>
+    `;
+  }
 }
 
-// 제보 유형 선택
+/* ======================
+   제보 다이얼로그 열기
+   ====================== */
+
+function openReportDialog() {
+  const modal = document.getElementById('report-modal');
+  if (modal) {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+/* ======================
+   제보 다이얼로그 닫기
+   ====================== */
+
+function closeReportDialog() {
+  const modal = document.getElementById('report-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+    
+    // 폼 초기화
+    const form = document.getElementById('report-form');
+    if (form) form.reset();
+    
+    selectedReportType = null;
+    
+    document.querySelectorAll('.report-type-btn').forEach(btn => {
+      btn.classList.remove('selected');
+    });
+    
+    const reporterInfo = document.getElementById('reporter-info');
+    if (reporterInfo) reporterInfo.style.display = 'block';
+  }
+}
+
+/* ======================
+   제보 유형 선택
+   ====================== */
+
 function selectReportType(type) {
   selectedReportType = type;
   
@@ -326,19 +432,23 @@ function selectReportType(type) {
   event.target.closest('.report-type-btn').classList.add('selected');
 }
 
-// 익명 토글
+/* ======================
+   익명 토글
+   ====================== */
+
 function toggleAnonymous() {
   const isAnonymous = document.getElementById('anonymous-checkbox').checked;
   const reporterInfo = document.getElementById('reporter-info');
   
-  if (isAnonymous) {
-    reporterInfo.style.display = 'none';
-  } else {
-    reporterInfo.style.display = 'block';
+  if (reporterInfo) {
+    reporterInfo.style.display = isAnonymous ? 'none' : 'block';
   }
 }
 
-// 제보 제출
+/* ======================
+   제보 제출
+   ====================== */
+
 async function submitReport(event) {
   event.preventDefault();
   
@@ -348,15 +458,22 @@ async function submitReport(event) {
     return;
   }
   
-  const description = document.getElementById('report-description').value.trim();
+  const descriptionEl = document.getElementById('report-description');
+  const description = descriptionEl ? descriptionEl.value.trim() : '';
+  
   if (!description) {
     showToast('상황 설명을 입력해주세요.');
     return;
   }
   
-  const isAnonymous = document.getElementById('anonymous-checkbox').checked;
-  const reporterName = isAnonymous ? null : document.getElementById('reporter-name').value.trim();
-  const reporterContact = isAnonymous ? null : document.getElementById('reporter-contact').value.trim();
+  const anonymousCheckbox = document.getElementById('anonymous-checkbox');
+  const isAnonymous = anonymousCheckbox ? anonymousCheckbox.checked : false;
+  
+  const reporterNameEl = document.getElementById('reporter-name');
+  const reporterContactEl = document.getElementById('reporter-contact');
+  
+  const reporterName = isAnonymous ? null : (reporterNameEl ? reporterNameEl.value.trim() : null);
+  const reporterContact = isAnonymous ? null : (reporterContactEl ? reporterContactEl.value.trim() : null);
   
   // 제보 데이터 생성
   const reportData = {
@@ -368,16 +485,19 @@ async function submitReport(event) {
     isAnonymous: isAnonymous,
     reporterName: reporterName,
     reporterContact: reporterContact,
-    submittedAt: new Date().toISOString()
+    userAgent: navigator.userAgent,
+    timestamp: new Date().toISOString()
   };
   
   try {
-    const url = `https://${CONFIG.SUPABASE_PROJECT_ID}.supabase.co/functions/v1/make-server-f49b8637/modit-api-v2/customer-reports`;
+    const url = `${API_BASE}/report`;
+    
+    console.log('📤 제보 제출:', reportData);
     
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(reportData)
@@ -391,13 +511,18 @@ async function submitReport(event) {
     closeReportDialog();
     
   } catch (error) {
-    console.error('제보 제출 실패:', error);
+    console.error('❌ 제보 제출 실패:', error);
     showToast('제보 제출 중 오류가 발생했습니다.');
   }
 }
 
-// 페이지 로드 시 초기화
+/* ======================
+   페이지 로드 시 초기화
+   ====================== */
+
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('✅ 페이지 초기화 시작');
+  
   // Lucide 아이콘 초기화
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
