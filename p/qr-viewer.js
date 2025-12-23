@@ -228,14 +228,25 @@ async function loadData() {
     if (!res.ok) throw new Error('가격표를 찾을 수 없습니다');
     
     const json = await res.json();
-    console.log('📦 데이터:', json);
+    console.log('📦 원본 응답:', json);
     
-    if (!json.success || !json.priceList) throw new Error('데이터 없음');
+    // 백엔드 응답 구조: {success: true, data: {success: true, priceList: {...}, viewCount: 123}, timestamp: '...'}
+    // data 필드를 추출
+    if (!json.data) {
+      throw new Error('응답에 data 필드가 없습니다');
+    }
     
-    let pl = json.priceList;
+    const responseData = json.data;
+    console.log('📦 추출된 data:', responseData);
+    
+    if (!responseData.priceList) {
+      throw new Error('가격표 데이터가 없습니다');
+    }
+    
+    let pl = responseData.priceList;
     if (typeof pl === 'string') pl = JSON.parse(pl);
     
-    priceData = { ...pl, viewCount: json.viewCount || 0 };
+    priceData = { ...pl, viewCount: responseData.viewCount || 0 };
     
     console.log('✅ 저장 완료:', priceData);
     
@@ -396,7 +407,7 @@ async function submitReport(e) {
   console.log('📤 제보:', data);
   
   try {
-    const res = await fetch(`${API_BASE}/report`, {
+    const res = await fetch(`${API_BASE}/customer-reports`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
