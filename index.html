@@ -211,6 +211,39 @@
       font-size: 15px;
       font-weight: 600;
     }
+
+    /* Company History */
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 30px 0 0 0;
+}
+
+.history-list li {
+  display: flex;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid #E0E0D8;
+}
+
+.history-list li:last-child {
+  border-bottom: none;
+}
+
+.history-date {
+  min-width: 110px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4A7729;
+}
+
+.history-text {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+    
   </style>
 </head>
 
@@ -337,6 +370,61 @@
 
 </div>
 
+<div class="section">
+  <div class="card">
+    <h2>회사 연혁</h2>
+
+    <ul class="history-list">
+      <li>
+        <span class="history-date">2025.04</span>
+        <span class="history-text">
+          전통시장 디지털 서비스 기획 착수
+        </span>
+      </li>
+
+      <li>
+        <span class="history-date">2025.05.26</span>
+        <span class="history-text">
+          주식회사 배와달(Baewadal) 법인 설립
+        </span>
+      </li>
+
+      <li>
+        <span class="history-date">2025.06</span>
+        <span class="history-text">
+          모디트 앱(Modit App) 기획 및 개발 착수
+        </span>
+      </li>
+
+      <li>
+        <span class="history-date">2025.07</span>
+        <span class="history-text">
+          전통시장 행정·운영 시스템<br>
+          모디트 오피스(Modit Office) 기획 및 개발 착수
+        </span>
+      </li>
+
+      <li>
+        <span class="history-date">2025.09</span>
+        <span class="history-text">
+          중리시장 사무소 대상 프로토타입 시연<br>
+          및 현장 피드백 확보
+        </span>
+      </li>
+
+      <li>
+        <span class="history-date">2026.01</span>
+        <span class="history-text">
+          모디트 앱 스토어 출시<br>
+          모디트 오피스 테스트 버전 완성
+        </span>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+  
 <!-- FOOTER -->
 <footer>
   © 2025 Baewadal / Modit. All rights reserved.
